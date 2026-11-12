@@ -1,14 +1,15 @@
 # ⚡ PayPulse AI — Enterprise HR & FinTech Mobile Platform
 
+[![Live Web Preview](https://img.shields.io/badge/Live_Demo-Vercel_Production-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://dist-three-kappa-22.vercel.app)
 [![React Native](https://img.shields.io/badge/React_Native-0.76-61DAFB?logo=react&logoColor=black)](https://reactnative.dev/)
 [![Expo](https://img.shields.io/badge/Expo-SDK_52-000020?logo=expo&logoColor=white)](https://expo.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js Express](https://img.shields.io/badge/Backend-Node.js_Express-68A063?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Agile](https://img.shields.io/badge/Agile-Taiga_Scrum-27ae60)](https://taiga.io/)
-[![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)](https://github.com/)
 
 > **Targeted Candidate Portfolio Project** tailored specifically for the **Mobile App Developer Intern** role at **Heftin AI**.  
-> Demonstrates the complete mobile engineering lifecycle: **Design → Build → Integrate → Test → Release → Improve**.
+> Demonstrates the complete mobile engineering lifecycle: **Design → Build → Integrate → Test → Release → Improve**.  
+> 🌐 **Live Deployed Web Demo:** [https://dist-three-kappa-22.vercel.app](https://dist-three-kappa-22.vercel.app)
 
 ---
 
@@ -216,3 +217,4 @@ Include this project under **Experience** or **Featured Projects** on your resum
 ├── start-all.sh                    # 1-click Unix dev launcher
 └── package.json                    # Unified monorepo runner
 ```
+
