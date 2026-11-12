@@ -1,0 +1,29 @@
+{
+  "name": "paypulse-monorepo",
+  "version": "2.4.0",
+  "description": "Enterprise HR & FinTech Mobile Platform for Heftin AI Portfolio",
+  "scripts": {
+    "start:backend": "cd backend && npm run dev",
+    "start:mobile": "cd mobile && npm start",
+    "dev": "concurrently -n \"BACKEND,MOBILE\" -c \"cyan,green\" \"cd backend && npm run dev\" \"cd mobile && npm start\"",
+    "build:backend": "cd backend && npm run build",
+    "typecheck": "cd mobile && npx tsc --noEmit",
+    "test": "cd backend && npm run build && cd ../mobile && npx tsc --noEmit"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "react-native",
+    "flutter",
+    "typescript",
+    "fintech",
+    "hr-tech",
+    "heftin-ai",
+    "ewa",
+    "expo",
+    "rest-api"
+  ],
+  "author": "Heftin AI Candidate",
+  "license": "MIT"
+}
