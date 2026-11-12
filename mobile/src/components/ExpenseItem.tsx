@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { ExpenseClaim } from '../types';
+import { formatINR } from '../utils/currency';
 
 interface ExpenseItemProps {
   claim: ExpenseClaim;
@@ -70,7 +71,7 @@ export const ExpenseItem: React.FC<ExpenseItemProps> = ({
           )}
         </View>
         <View style={styles.rightCol}>
-          <Text style={styles.amount}>${claim.amount.toFixed(2)}</Text>
+          <Text style={styles.amount}>{formatINR(claim.amount)}</Text>
         </View>
       </View>
 
@@ -84,12 +85,13 @@ export const ExpenseItem: React.FC<ExpenseItemProps> = ({
       {/* Action Row */}
       <View style={styles.actionRow}>
         <TouchableOpacity
-          style={styles.receiptButton}
+          style={[styles.receiptButton, !claim.receiptUrl && styles.receiptButtonDisabled]}
           onPress={() => onViewReceipt && onViewReceipt(claim.receiptUrl)}
+          disabled={!claim.receiptUrl}
           activeOpacity={0.7}
         >
-          <Ionicons name="document-attach-outline" size={14} color={Colors.textSecondary} />
-          <Text style={styles.receiptButtonText}>View Receipt Attached</Text>
+          <Ionicons name={claim.receiptUrl ? 'document-attach-outline' : 'document-outline'} size={14} color={claim.receiptUrl ? Colors.textSecondary : Colors.textMuted} />
+          <Text style={styles.receiptButtonText}>{claim.receiptUrl ? 'View receipt' : 'No receipt attached'}</Text>
         </TouchableOpacity>
 
         {isManager && claim.status === 'PENDING' && (
@@ -218,6 +220,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+  },
+  receiptButtonDisabled: {
+    opacity: 0.65,
   },
   receiptButtonText: {
     fontSize: 12,

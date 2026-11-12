@@ -8,8 +8,6 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   isLoading: boolean;
-  biometricsEnabled: boolean;
-  setBiometricsEnabled: (enabled: boolean) => Promise<void>;
   login: (email: string, password?: string) => Promise<void>;
   switchRole: (role: 'EMPLOYEE' | 'HR_MANAGER') => Promise<void>;
   logout: () => Promise<void>;
@@ -21,7 +19,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [biometricsEnabled, setBiometricsEnabledState] = useState(true);
 
   useEffect(() => {
     loadStoredSession();
@@ -29,26 +26,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loadStoredSession = async () => {
     try {
-      const storedToken = await AsyncStorage.getItem('@paypulse_token');
-      const storedUser = await AsyncStorage.getItem('@paypulse_user');
-      const storedBio = await AsyncStorage.getItem('@paypulse_biometrics');
-
-      if (storedBio !== null) {
-        setBiometricsEnabledState(storedBio === 'true');
-      }
-
+      // v2 keys intentionally invalidate the old auto-login demo session so the sign-in
+      // flow is shown on the first visit to the redesigned application.
+      const storedToken = await AsyncStorage.getItem('@paypulse_token_v2');
+      const storedUser = await AsyncStorage.getItem('@paypulse_user_v2');
       if (storedToken && storedUser) {
         const parsedUser: User = JSON.parse(storedUser);
         await setDemoRole(parsedUser.role === 'HR_MANAGER' ? 'HR_MANAGER' : 'EMPLOYEE');
         setToken(storedToken);
         setUser(parsedUser);
-      } else {
-        // Automatically pre-load employee session for frictionless first-run experience
-        const res = await Api.login('employee@heftin.ai', 'password123');
-        setToken(res.token);
-        setUser(res.user);
-        await AsyncStorage.setItem('@paypulse_token', res.token);
-        await AsyncStorage.setItem('@paypulse_user', JSON.stringify(res.user));
       }
     } catch (e) {
       console.warn('Error loading auth session:', e);
@@ -63,8 +49,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await Api.login(email, password);
       setToken(res.token);
       setUser(res.user);
-      await AsyncStorage.setItem('@paypulse_token', res.token);
-      await AsyncStorage.setItem('@paypulse_user', JSON.stringify(res.user));
+      await AsyncStorage.setItem('@paypulse_token_v2', res.token);
+      await AsyncStorage.setItem('@paypulse_user_v2', JSON.stringify(res.user));
     } finally {
       setIsLoading(false);
     }
@@ -76,23 +62,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const res = await Api.switchRole(role);
       setToken(res.token);
       setUser(res.user);
-      await AsyncStorage.setItem('@paypulse_token', res.token);
-      await AsyncStorage.setItem('@paypulse_user', JSON.stringify(res.user));
+      await AsyncStorage.setItem('@paypulse_token_v2', res.token);
+      await AsyncStorage.setItem('@paypulse_user_v2', JSON.stringify(res.user));
     } finally {
       setIsLoading(false);
     }
   };
 
-  const setBiometricsEnabled = async (enabled: boolean) => {
-    setBiometricsEnabledState(enabled);
-    await AsyncStorage.setItem('@paypulse_biometrics', String(enabled));
-  };
-
   const logout = async () => {
     setToken(null);
     setUser(null);
-    await AsyncStorage.removeItem('@paypulse_token');
-    await AsyncStorage.removeItem('@paypulse_user');
+    await AsyncStorage.removeItem('@paypulse_token_v2');
+    await AsyncStorage.removeItem('@paypulse_user_v2');
   };
 
   return (
@@ -101,8 +82,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         token,
         isLoading,
-        biometricsEnabled,
-        setBiometricsEnabled,
         login,
         switchRole,
         logout,

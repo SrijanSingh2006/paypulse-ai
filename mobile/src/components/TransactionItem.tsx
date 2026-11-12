@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { EwaTransaction } from '../types';
+import { formatINR } from '../utils/currency';
 
 export const TransactionItem: React.FC<{ item: EwaTransaction }> = ({ item }) => {
   const formattedDate = new Date(item.disbursedAt).toLocaleDateString('en-US', {
@@ -31,9 +32,9 @@ export const TransactionItem: React.FC<{ item: EwaTransaction }> = ({ item }) =>
       </View>
 
       <View style={styles.right}>
-        <Text style={styles.amount}>+${item.amount.toFixed(2)}</Text>
+        <Text style={styles.amount}>+{formatINR(item.amount)}</Text>
         <View style={styles.statusBadge}>
-          <Text style={styles.statusText}>{item.transferType === 'INSTANT_ACH' ? 'Instant ACH' : 'PayPulse Standard'}</Text>
+          <Text style={styles.statusText}>{item.transferType === 'INSTANT_UPI' ? 'Instant UPI demo' : 'PayPulse Standard'}</Text>
         </View>
       </View>
     </View>

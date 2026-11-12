@@ -6,17 +6,17 @@ const router = Router();
 router.get('/version-check', (req, res) => {
   const clientVersion = (req.query.version as string) || '1.0.0';
   const currentProductionRelease = {
-    latestVersion: '2.4.0',
-    buildNumber: 104,
+    latestVersion: '2.5.0',
+    buildNumber: 105,
     minimumRequiredVersion: '2.0.0',
     forceUpdate: false,
     updateRecommended: false,
     releaseDate: new Date().toISOString(),
     whatsNew: [
-      '⚡ Wage accrual with an interactive demo advance ledger',
-      '📸 Expense claims with optional receipt attachment and HR review',
-      '✨ Benefits Copilot for wage, payslip, and policy questions',
-      '🔁 Employee and manager demo roles with separate wage balances',
+      '☀️ Responsive light workspace with employee and HR manager sign-in',
+      '₹ Indian rupee wage, reimbursement, and allowance ledger',
+      '🔎 Claim search and status filters with receipt review',
+      '📅 Payday outlook and downloadable payslip summary',
     ],
     storeUrl: '',
     environment: 'portfolio-demo',

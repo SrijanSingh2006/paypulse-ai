@@ -9,6 +9,7 @@ import {
   Modal,
   Image,
   Alert,
+  TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
@@ -18,6 +19,7 @@ import { Api } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { ExpenseClaim } from '../types';
+import { formatINR } from '../utils/currency';
 
 const CATEGORY_FILTERS = [
   { id: 'ALL', label: 'All' },
@@ -26,12 +28,21 @@ const CATEGORY_FILTERS = [
   { id: 'HARDWARE_OFFICE', label: 'Hardware' },
 ];
 
+const STATUS_FILTERS = [
+  { id: 'ALL', label: 'All status' },
+  { id: 'PENDING', label: 'Pending' },
+  { id: 'APPROVED', label: 'Approved' },
+  { id: 'REJECTED', label: 'Rejected' },
+];
+
 export const ExpensesScreen: React.FC = () => {
   const { user } = useAuth();
   const { refreshKey, triggerRefresh, isExpenseModalOpen, setIsExpenseModalOpen } = useApp();
 
   const [claims, setClaims] = useState<ExpenseClaim[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [selectedStatus, setSelectedStatus] = useState('ALL');
+  const [searchQuery, setSearchQuery] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
@@ -39,7 +50,7 @@ export const ExpensesScreen: React.FC = () => {
 
   const loadClaims = async () => {
     try {
-      const data = await Api.getExpenses(undefined, selectedCategory === 'ALL' ? undefined : selectedCategory);
+      const data = await Api.getExpenses();
       setClaims(data);
     } catch (e) {
       console.warn('Error loading expenses:', e);
@@ -50,7 +61,7 @@ export const ExpensesScreen: React.FC = () => {
 
   useEffect(() => {
     loadClaims();
-  }, [refreshKey, selectedCategory, user]);
+  }, [refreshKey, user]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -78,9 +89,16 @@ export const ExpensesScreen: React.FC = () => {
   // EdTech Allowance Calculations
   const edTechClaims = claims.filter((c) => c.category === 'EDUCATION_EDTECH' && c.status === 'APPROVED');
   const edTechSpent = edTechClaims.reduce((sum, c) => sum + c.amount, 0);
-  const edTechBudget = 1200.0;
+  const edTechBudget = 50000;
   const edTechRemaining = Math.max(0, edTechBudget - edTechSpent);
   const edTechProgress = Math.min(100, Math.round((edTechSpent / edTechBudget) * 100));
+  const visibleClaims = claims.filter((claim) => {
+    const matchesStatus = selectedStatus === 'ALL' || claim.status === selectedStatus;
+    const matchesCategory = selectedCategory === 'ALL' || claim.category === selectedCategory;
+    const query = searchQuery.trim().toLowerCase();
+    const matchesQuery = !query || [claim.title, claim.merchant, claim.employeeName].some((value) => value.toLowerCase().includes(query));
+    return matchesStatus && matchesCategory && matchesQuery;
+  });
 
   return (
     <View style={styles.container}>
@@ -100,6 +118,34 @@ export const ExpensesScreen: React.FC = () => {
             : 'Submit and track reimbursement claims. This demo keeps changes in its workspace ledger.'}
         </Text>
 
+        <View style={styles.searchBox}>
+          <Ionicons name="search-outline" size={17} color={Colors.textMuted} />
+          <TextInput
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            placeholder="Search claim, merchant or employee"
+            placeholderTextColor={Colors.textMuted}
+            style={styles.searchInput}
+            returnKeyType="search"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')} accessibilityLabel="Clear search">
+              <Ionicons name="close-circle" size={17} color={Colors.textMuted} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterRow}>
+          {STATUS_FILTERS.map((filter) => {
+            const active = selectedStatus === filter.id;
+            return (
+              <TouchableOpacity key={filter.id} style={[styles.filterChip, active && styles.activeFilterChip]} onPress={() => setSelectedStatus(filter.id)}>
+                <Text style={[styles.filterChipText, active && styles.activeFilterChipText]}>{filter.label}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+
         {/* Corporate EdTech Allowance Tracker */}
         <View style={styles.stipendCard}>
           <View style={styles.stipendTopRow}>
@@ -107,7 +153,7 @@ export const ExpensesScreen: React.FC = () => {
               <Ionicons name="school" size={14} color={Colors.edTech} />
               <Text style={styles.stipendBadgeText}>ANNUAL EDTECH LEARNING PERK</Text>
             </View>
-            <Text style={styles.stipendBalanceText}>${edTechRemaining.toFixed(2)} Left</Text>
+            <Text style={styles.stipendBalanceText}>{formatINR(edTechRemaining)} left</Text>
           </View>
 
           <View style={styles.progressContainer}>
@@ -117,8 +163,8 @@ export const ExpensesScreen: React.FC = () => {
           </View>
 
           <View style={styles.stipendMeta}>
-            <Text style={styles.stipendMetaText}>Used: ${edTechSpent.toFixed(2)}</Text>
-            <Text style={styles.stipendMetaText}>Annual Stipend: ${edTechBudget.toFixed(2)}</Text>
+            <Text style={styles.stipendMetaText}>Used: {formatINR(edTechSpent)}</Text>
+            <Text style={styles.stipendMetaText}>Annual allowance: {formatINR(edTechBudget)}</Text>
           </View>
         </View>
 
@@ -146,8 +192,8 @@ export const ExpensesScreen: React.FC = () => {
 
         {/* Claims List */}
         <View style={styles.listSection}>
-          {claims.length > 0 ? (
-            claims.map((claim) => (
+          {visibleClaims.length > 0 ? (
+            visibleClaims.map((claim) => (
               <ExpenseItem
                 key={claim.id}
                 claim={claim}
@@ -160,7 +206,7 @@ export const ExpensesScreen: React.FC = () => {
           ) : (
             <View style={styles.emptyContainer}>
               <Ionicons name="file-tray-outline" size={32} color={Colors.textMuted} />
-              <Text style={styles.emptyText}>No claims found in this category.</Text>
+              <Text style={styles.emptyText}>{searchQuery ? 'No claims match your search.' : 'No claims found for these filters.'}</Text>
             </View>
           )}
         </View>
@@ -210,6 +256,9 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     paddingBottom: 80,
+    width: '100%',
+    maxWidth: 1100,
+    alignSelf: 'center',
   },
   headerTitle: {
     fontSize: 22,
@@ -222,6 +271,23 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 12,
     lineHeight: 18,
+  },
+  searchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 9,
+    backgroundColor: Colors.card,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: 12,
+    color: Colors.text,
+    fontSize: 13,
   },
   stipendCard: {
     backgroundColor: Colors.card,

@@ -149,7 +149,7 @@ export const ModalSubmitExpense: React.FC<ModalSubmitExpenseProps> = ({
             <Text style={styles.label}>Claim Title</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. Flutter & React Native Certification Course"
+              placeholder="e.g. Cloud certification course"
               placeholderTextColor={Colors.textMuted}
               value={title}
               onChangeText={setTitle}
@@ -158,7 +158,7 @@ export const ModalSubmitExpense: React.FC<ModalSubmitExpenseProps> = ({
             {/* Amount and Merchant */}
             <View style={styles.row}>
               <View style={styles.halfCol}>
-                <Text style={styles.label}>Amount ($ USD)</Text>
+                <Text style={styles.label}>Amount (₹ INR)</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="0.00"

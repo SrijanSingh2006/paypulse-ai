@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Switch,
   Image,
   Alert,
 } from 'react-native';
@@ -17,7 +16,7 @@ import { Api } from '../api/endpoints';
 import { Payslip } from '../types';
 
 export const ProfileSettingsScreen: React.FC = () => {
-  const { user, switchRole, logout, biometricsEnabled, setBiometricsEnabled } = useAuth();
+  const { user, switchRole, logout } = useAuth();
   const [selectedPayslip, setSelectedPayslip] = useState<Payslip | null>(null);
 
   const isManager = user?.role === 'HR_MANAGER';
@@ -29,13 +28,6 @@ export const ProfileSettingsScreen: React.FC = () => {
     } else {
       Alert.alert('No Payslips', 'No processed payslips found.');
     }
-  };
-
-  const handleShowStoreSigning = () => {
-    Alert.alert(
-      'EAS build configuration',
-      'Preview and production profiles are defined in mobile/eas.json. This portfolio demo does not include signing keys or published mobile store builds.'
-    );
   };
 
   return (
@@ -58,7 +50,7 @@ export const ProfileSettingsScreen: React.FC = () => {
         </View>
 
         {/* Demo Fast Switcher */}
-        <Text style={styles.sectionHeader}>Role Switching (Demo Evaluator)</Text>
+        <Text style={styles.sectionHeader}>Preview another role</Text>
         <View style={styles.switchRow}>
           <TouchableOpacity
             style={[styles.roleBtn, !isManager && styles.roleBtnActive]}
@@ -81,70 +73,25 @@ export const ProfileSettingsScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Security & Biometrics */}
-        <Text style={styles.sectionHeader}>Demo preferences</Text>
+        <Text style={styles.sectionHeader}>Payroll & payslips</Text>
         <View style={styles.cardGroup}>
-          <View style={styles.settingItem}>
-            <View style={styles.settingLeft}>
-              <Ionicons name="finger-print-outline" size={20} color={Colors.primary} />
-              <View>
-                <Text style={styles.settingTitle}>Quick unlock shortcut</Text>
-                <Text style={styles.settingSubtitle}>Demo preference only; no device biometric check runs</Text>
-              </View>
-            </View>
-            <Switch
-              value={biometricsEnabled}
-              onValueChange={setBiometricsEnabled}
-              trackColor={{ false: Colors.cardSecondary, true: Colors.primary }}
-              thumbColor="#FFF"
-            />
-          </View>
-
           <TouchableOpacity style={styles.settingItem} onPress={handleOpenPayslip}>
             <View style={styles.settingLeft}>
               <Ionicons name="document-text-outline" size={20} color={Colors.warning} />
               <View>
-                <Text style={styles.settingTitle}>View payslip breakdown</Text>
-                <Text style={styles.settingSubtitle}>Demo tax, retirement, insurance, and net pay</Text>
+                <Text style={styles.settingTitle}>Latest payslip</Text>
+                <Text style={styles.settingSubtitle}>View earnings, deductions and export a summary</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={18} color={Colors.textMuted} />
           </TouchableOpacity>
-        </View>
-
-        {/* Release & DevOps Diagnostics (For Heftin AI JD) */}
-        <Text style={styles.sectionHeader}>Build configuration</Text>
-        <View style={styles.cardGroup}>
-          <TouchableOpacity style={styles.settingItem} onPress={handleShowStoreSigning}>
-            <View style={styles.settingLeft}>
-              <Ionicons name="key-outline" size={20} color={Colors.accentLight} />
-              <View>
-                <Text style={styles.settingTitle}>EAS build profiles</Text>
-                <Text style={styles.settingSubtitle}>Preview and production settings</Text>
-              </View>
-            </View>
-            <Ionicons name="chevron-forward" size={18} color={Colors.textMuted} />
-          </TouchableOpacity>
-
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Package Identifier</Text>
-            <Text style={styles.infoValue}>ai.heftin.paypulse</Text>
+            <Text style={styles.infoLabel}>Payout bank</Text>
+            <Text style={styles.infoValue}>{user?.bankAccount.bankName || 'Demo bank'}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Build Version / Code</Text>
-            <Text style={styles.infoValue}>v2.4.0 (104)</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Mobile Architecture</Text>
-            <Text style={styles.infoValue}>React Native New Arch (Fabric + Turbo)</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Architecture notes</Text>
-            <Text style={styles.infoValue}>React Native implementation + RFC</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Demo environment</Text>
-            <Text style={styles.infoValue}>Local state · no real money movement</Text>
+            <Text style={styles.infoLabel}>Account</Text>
+            <Text style={styles.infoValue}>{user?.bankAccount.accountMasked || '•••• 4829'}</Text>
           </View>
         </View>
 
@@ -172,6 +119,9 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     paddingBottom: 40,
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
   },
   profileCard: {
     backgroundColor: Colors.card,

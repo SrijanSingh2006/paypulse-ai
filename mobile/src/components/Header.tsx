@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
     width: '100%',
-    maxWidth: 960,
+    maxWidth: 1120,
     alignSelf: 'center',
   },
   leftRow: {

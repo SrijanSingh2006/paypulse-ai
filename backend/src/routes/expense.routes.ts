@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { database, ExpenseClaim, AppNotification } from '../data/db';
 import { authenticateToken, AuthRequest } from '../middleware/auth.middleware';
+import { formatINR } from '../utils/currency';
 
 const router = Router();
 
@@ -57,7 +58,7 @@ router.post('/', authenticateToken, (req: AuthRequest, res) => {
     title: title.trim(),
     category: selectedCategory,
     amount: numAmount,
-    currency: 'USD',
+    currency: 'INR',
     merchant: merchant ? merchant.trim() : 'Company Vendor',
     date: date || new Date().toISOString().split('T')[0],
     receiptUrl: receiptUrl || undefined,
@@ -74,7 +75,7 @@ router.post('/', authenticateToken, (req: AuthRequest, res) => {
       id: `notif_${Date.now()}_${mgr.id}`,
       userId: mgr.id,
       title: 'New Expense Claim Submitted',
-      message: `${user.name} submitted a $${numAmount.toFixed(2)} claim for "${title}".`,
+      message: `${user.name} submitted a ${formatINR(numAmount)} claim for "${title}".`,
       type: 'EXPENSE_UPDATE',
       read: false,
       timestamp: new Date().toISOString(),
@@ -122,7 +123,7 @@ router.patch('/:id/review', authenticateToken, (req: AuthRequest, res) => {
     id: `notif_${Date.now()}`,
     userId: claim.userId,
     title: claim.status === 'APPROVED' ? 'Claim Approved! 🎉' : 'Claim Status Update',
-    message: `Your claim "${claim.title}" ($${claim.amount.toFixed(2)}) has been ${claim.status.toLowerCase()} by ${user.name}.`,
+    message: `Your claim "${claim.title}" (${formatINR(claim.amount)}) has been ${claim.status.toLowerCase()} by ${user.name}.`,
     type: 'EXPENSE_UPDATE',
     read: false,
     timestamp: new Date().toISOString(),
@@ -169,7 +170,7 @@ router.get('/stats', authenticateToken, (req: AuthRequest, res) => {
       totalApprovedAmount: Math.round(totalApproved * 100) / 100,
       totalPendingAmount: Math.round(totalPending * 100) / 100,
       categoryBreakdown: categoryTotals,
-      annualEdTechBudgetLimit: 1200.0,
+      annualEdTechBudgetLimit: 50000,
       edTechClaimed: Math.round((categoryTotals['EDUCATION_EDTECH'] || 0) * 100) / 100,
     },
   });

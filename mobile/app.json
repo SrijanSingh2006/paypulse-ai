@@ -2,7 +2,7 @@
   "expo": {
     "name": "PayPulse AI",
     "slug": "paypulse-mobile",
-    "version": "2.4.0",
+    "version": "2.5.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,8 +17,7 @@
       "bundleIdentifier": "ai.heftin.paypulse",
       "infoPlist": {
         "NSCameraUsageDescription": "PayPulse uses your camera to scan and upload receipt invoices for HR expense reimbursements.",
-        "NSPhotoLibraryUsageDescription": "PayPulse accesses your photo library to attach receipt documents to corporate expense claims.",
-        "NSFaceIDUsageDescription": "PayPulse uses Face ID to securely authenticate and disburse on-demand salary advances."
+        "NSPhotoLibraryUsageDescription": "PayPulse accesses your photo library to attach receipt documents to corporate expense claims."
       }
     },
     "android": {
@@ -27,13 +26,11 @@
         "backgroundColor": "#F4F7F6"
       },
       "package": "ai.heftin.paypulse",
-      "versionCode": 104,
+      "versionCode": 105,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.USE_BIOMETRIC",
-        "android.permission.USE_FINGERPRINT",
         "android.permission.POST_NOTIFICATIONS"
       ]
     },

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { EwaSummary } from '../types';
+import { formatINR } from '../utils/currency';
 
 interface WageCardProps {
   summary: EwaSummary | null;
@@ -11,10 +12,10 @@ interface WageCardProps {
 }
 
 export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, isLoading }) => {
-  const available = summary ? summary.availableToWithdraw : 790;
-  const accrued = summary ? summary.grossAccruedToDate : 2880;
-  const monthly = summary ? summary.monthlySalary : 7200;
-  const currentDay = summary ? summary.currentDayOfMonth : 12;
+  const available = summary ? summary.availableToWithdraw : 19500;
+  const accrued = summary ? summary.grossAccruedToDate : 52000;
+  const monthly = summary ? summary.monthlySalary : 120000;
+  const currentDay = summary ? summary.currentDayOfMonth : 13;
   const daysInMonth = summary ? summary.daysInMonth : 30;
 
   const monthProgress = Math.min(100, Math.round((currentDay / daysInMonth) * 100));
@@ -49,9 +50,8 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
       <View style={styles.balanceSection}>
         <Text style={styles.availableLabel}>Available in Demo Ledger</Text>
         <View style={styles.amountRow}>
-          <Text style={styles.currencySymbol}>$</Text>
           <Text style={styles.amountText}>
-            {available.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatINR(available)}
           </Text>
           <View style={styles.changePill}>
             <Ionicons name="trending-up" size={11} color={Colors.primary} />
@@ -60,8 +60,8 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
         </View>
         <Text style={styles.subtext}>
           Accrued so far:{' '}
-          <Text style={styles.boldText}>${accrued.toFixed(2)}</Text>{' '}
-          of ${monthly.toFixed(2)} gross
+          <Text style={styles.boldText}>{formatINR(accrued)}</Text>{' '}
+          of {formatINR(monthly)} gross
         </Text>
       </View>
 
@@ -92,17 +92,17 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
       {/* Stats Row */}
       <View style={styles.statsRow}>
         <View style={styles.statItem}>
-          <Text style={styles.statValue}>${summary?.dailyEarnings?.toFixed(0) || '240'}</Text>
+          <Text style={styles.statValue}>{formatINR(summary?.dailyEarnings ?? 4000, 0)}</Text>
           <Text style={styles.statLabel}>Daily Rate</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
-          <Text style={styles.statValue}>${summary?.withdrawnToDate?.toFixed(0) || '650'}</Text>
+          <Text style={styles.statValue}>{formatINR(summary?.withdrawnToDate ?? 6500, 0)}</Text>
           <Text style={[styles.statLabel, { color: Colors.danger }]}>Disbursed</Text>
         </View>
         <View style={styles.statDivider} />
         <View style={styles.statItem}>
-          <Text style={styles.statValue}>${summary?.maxEligibleAccrual?.toFixed(0) || '1440'}</Text>
+          <Text style={styles.statValue}>{formatINR(summary?.maxEligibleAccrual ?? 26000, 0)}</Text>
           <Text style={styles.statLabel}>Eligible Cap</Text>
         </View>
       </View>
@@ -139,8 +139,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.18,
-    shadowRadius: 14,
+    shadowOpacity: 0.06,
+    shadowRadius: 18,
     elevation: 5,
     marginVertical: 10,
     overflow: 'hidden',
@@ -163,13 +163,13 @@ const styles = StyleSheet.create({
   pulseBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    backgroundColor: Colors.primaryTint,
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 20,
     gap: 6,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.2)',
+    borderColor: Colors.border,
   },
   pulseDot: {
     width: 7,
@@ -231,13 +231,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    backgroundColor: Colors.primaryTint,
     paddingHorizontal: 7,
     paddingVertical: 3,
     borderRadius: 6,
     marginBottom: 6,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.2)',
+    borderColor: Colors.border,
   },
   changeText: {
     fontSize: 10,

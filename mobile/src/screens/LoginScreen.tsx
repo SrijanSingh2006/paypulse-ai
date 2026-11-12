@@ -10,20 +10,23 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  useWindowDimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { useAuth } from '../context/AuthContext';
 
 export const LoginScreen: React.FC = () => {
-  const { login, isLoading, biometricsEnabled } = useAuth();
-  const [email, setEmail] = useState('employee@heftin.ai');
-  const [password, setPassword] = useState('password123');
+  const { login, isLoading } = useAuth();
+  const { width } = useWindowDimensions();
+  const wideLayout = width >= 820;
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async (targetEmail?: string) => {
+  const handleLogin = async (targetEmail?: string, targetPassword = password) => {
     try {
-      await login(targetEmail || email, password);
+      await login(targetEmail || email, targetPassword);
     } catch (e: any) {
       Alert.alert('Login Failed', e.message || 'Please check your credentials.');
     }
@@ -35,26 +38,26 @@ export const LoginScreen: React.FC = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView
-        contentContainerStyle={styles.inner}
+        contentContainerStyle={[styles.inner, wideLayout && styles.innerWide]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
         {/* Brand Header */}
-        <View style={styles.brandContainer}>
+        <View style={[styles.brandContainer, wideLayout && styles.brandContainerWide]}>
           <View style={styles.logoGlow}>
             <View style={styles.logoCircle}>
               <Ionicons name="pulse" size={40} color={Colors.primary} />
             </View>
           </View>
           <Text style={styles.brandTitle}>PayPulse AI</Text>
-          <Text style={styles.brandTagline}>by Heftin AI</Text>
-          <Text style={styles.brandSub}>
-            Earned Wage Access · HR Expense Ecosystem · AI Copilot
+          <Text style={styles.brandTagline}>Financial wellbeing, made visible.</Text>
+          <Text style={[styles.brandSub, wideLayout && styles.brandSubWide]}>
+            One workspace for earned wages, expense reimbursements and your monthly pay story.
           </Text>
 
           {/* Feature pills */}
           <View style={styles.featurePills}>
-            {['0% Interest EWA', 'Instant ACH', 'AI HR Copilot'].map((f) => (
+            {['Earned wage access', 'Expense workflows', 'Pay insights'].map((f) => (
               <View key={f} style={styles.featurePill}>
                 <Ionicons name="checkmark-circle" size={11} color={Colors.primary} />
                 <Text style={styles.featurePillText}>{f}</Text>
@@ -63,9 +66,12 @@ export const LoginScreen: React.FC = () => {
           </View>
         </View>
 
+        <View style={[styles.authColumn, wideLayout && styles.authColumnWide]}>
         {/* Form Card */}
         <View style={styles.formCard}>
-          <Text style={styles.formTitle}>Sign In</Text>
+          <Text style={styles.formEyebrow}>PAYPULSE WORKSPACE</Text>
+          <Text style={styles.formTitle}>Welcome back</Text>
+          <Text style={styles.formSubtitle}>Sign in to continue to your benefits dashboard.</Text>
 
           <Text style={styles.label}>Corporate Email</Text>
           <View style={styles.inputWrapper}>
@@ -78,6 +84,7 @@ export const LoginScreen: React.FC = () => {
               onChangeText={setEmail}
               autoCapitalize="none"
               keyboardType="email-address"
+              autoComplete="email"
             />
           </View>
 
@@ -91,6 +98,9 @@ export const LoginScreen: React.FC = () => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
+              autoComplete="current-password"
+              returnKeyType="go"
+              onSubmitEditing={() => handleLogin()}
             />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
               <Ionicons
@@ -112,21 +122,11 @@ export const LoginScreen: React.FC = () => {
             ) : (
               <>
                 <Ionicons name="log-in-outline" size={18} color={Colors.onPrimary} />
-                <Text style={styles.loginBtnText}>Continue to Demo</Text>
+                <Text style={styles.loginBtnText}>Sign in to PayPulse</Text>
               </>
             )}
           </TouchableOpacity>
 
-          {biometricsEnabled && (
-            <TouchableOpacity
-              style={styles.biometricBtn}
-              onPress={() => handleLogin()}
-              activeOpacity={0.8}
-            >
-              <Ionicons name="finger-print-outline" size={20} color={Colors.primary} />
-              <Text style={styles.biometricText}>Demo Quick Unlock</Text>
-            </TouchableOpacity>
-          )}
         </View>
 
         {/* Demo Shortcuts */}
@@ -142,7 +142,7 @@ export const LoginScreen: React.FC = () => {
               style={styles.demoBtn}
               onPress={() => {
                 setEmail('employee@heftin.ai');
-                handleLogin('employee@heftin.ai');
+                handleLogin('employee@heftin.ai', 'password123');
               }}
               activeOpacity={0.8}
             >
@@ -159,7 +159,7 @@ export const LoginScreen: React.FC = () => {
               style={[styles.demoBtn, styles.demoBtnManager]}
               onPress={() => {
                 setEmail('manager@heftin.ai');
-                handleLogin('manager@heftin.ai');
+                handleLogin('manager@heftin.ai', 'password123');
               }}
               activeOpacity={0.8}
             >
@@ -172,11 +172,13 @@ export const LoginScreen: React.FC = () => {
               </View>
             </TouchableOpacity>
           </View>
+          <Text style={styles.demoHint}>Demo password: <Text style={styles.demoPassword}>password123</Text></Text>
         </View>
 
         <Text style={styles.footerText}>
-          Heftin PayPulse AI v2.4.0 · ai.heftin.paypulse · Berkeley CA
+          Demo environment · Sample data only · No real payments are processed
         </Text>
+        </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -191,55 +193,81 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     padding: 24,
-    paddingTop: 40,
+    paddingTop: 28,
     paddingBottom: 32,
+    width: '100%',
+    maxWidth: 620,
+    alignSelf: 'center',
+  },
+  innerWide: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 64,
+    maxWidth: 1120,
+    paddingHorizontal: 48,
   },
   brandContainer: {
     alignItems: 'center',
     marginBottom: 28,
   },
+  brandContainerWide: {
+    alignItems: 'flex-start',
+    flex: 1,
+    marginBottom: 0,
+  },
+  authColumn: {
+    width: '100%',
+  },
+  authColumnWide: {
+    flex: 1,
+    maxWidth: 430,
+  },
   logoGlow: {
     shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 20,
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
     elevation: 8,
     marginBottom: 14,
   },
   logoCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    backgroundColor: Colors.primaryTint,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(16, 185, 129, 0.4)',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   brandTitle: {
-    fontSize: 30,
+    fontSize: 42,
     fontWeight: '800',
     color: Colors.text,
     letterSpacing: -0.5,
   },
   brandTagline: {
-    fontSize: 13,
+    fontSize: 17,
     color: Colors.primary,
     fontWeight: '700',
-    marginTop: 2,
+    marginTop: 8,
   },
   brandSub: {
-    fontSize: 12,
+    fontSize: 14,
     color: Colors.textMuted,
     textAlign: 'center',
     marginTop: 6,
-    maxWidth: 280,
-    lineHeight: 17,
+    maxWidth: 420,
+    lineHeight: 22,
+  },
+  brandSubWide: {
+    textAlign: 'left',
   },
   featurePills: {
     flexDirection: 'row',
     gap: 8,
-    marginTop: 12,
+    marginTop: 20,
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
@@ -261,17 +289,35 @@ const styles = StyleSheet.create({
   },
   formCard: {
     backgroundColor: Colors.card,
-    borderRadius: 22,
-    padding: 22,
+    borderRadius: 20,
+    padding: 24,
     borderWidth: 1,
     borderColor: Colors.border,
     marginBottom: 20,
+    shadowColor: '#10231B',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.06,
+    shadowRadius: 24,
+    elevation: 3,
+  },
+  formEyebrow: {
+    color: Colors.primary,
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1.2,
+    marginBottom: 8,
   },
   formTitle: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: '800',
     color: Colors.text,
-    marginBottom: 16,
+    marginBottom: 4,
+  },
+  formSubtitle: {
+    color: Colors.textSecondary,
+    fontSize: 13,
+    lineHeight: 19,
+    marginBottom: 14,
   },
   label: {
     fontSize: 11,
@@ -324,23 +370,6 @@ const styles = StyleSheet.create({
     color: Colors.onPrimary,
     fontSize: 15,
     fontWeight: '800',
-  },
-  biometricBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginTop: 14,
-    paddingVertical: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.25)',
-    backgroundColor: 'rgba(16, 185, 129, 0.05)',
-  },
-  biometricText: {
-    color: Colors.primary,
-    fontSize: 13,
-    fontWeight: '600',
   },
   demoSection: {
     marginBottom: 20,
@@ -400,6 +429,16 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: Colors.textMuted,
     marginTop: 1,
+  },
+  demoHint: {
+    color: Colors.textMuted,
+    fontSize: 11,
+    marginTop: 10,
+    textAlign: 'center',
+  },
+  demoPassword: {
+    color: Colors.textSecondary,
+    fontWeight: '700',
   },
   footerText: {
     textAlign: 'center',

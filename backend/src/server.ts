@@ -34,7 +34,7 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ONLINE',
     service: 'Heftin PayPulse API Gateway',
-    version: '2.4.0',
+    version: '2.5.0',
     timestamp: new Date().toISOString(),
     supportedFeatures: [
       'JWT Authentication & RBAC',

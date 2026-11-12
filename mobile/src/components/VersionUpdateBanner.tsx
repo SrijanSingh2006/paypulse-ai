@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: 'rgba(17, 35, 28, 0.35)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,

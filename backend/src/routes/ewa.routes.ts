@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { database, EwaTransaction, AppNotification } from '../data/db';
 import { authenticateToken, AuthRequest } from '../middleware/auth.middleware';
+import { formatINR } from '../utils/currency';
 
 const router = Router();
 
@@ -76,7 +77,7 @@ router.post('/request-advance', authenticateToken, (req: AuthRequest, res) => {
   if (numAmount > summary.availableToWithdraw) {
     return res.status(400).json({
       success: false,
-      message: `Requested amount ($${numAmount.toFixed(2)}) exceeds available limit of $${summary.availableToWithdraw.toFixed(2)}.`,
+      message: `Requested amount (${formatINR(numAmount)}) exceeds available limit of ${formatINR(summary.availableToWithdraw)}.`,
     });
   }
 
@@ -89,7 +90,7 @@ router.post('/request-advance', authenticateToken, (req: AuthRequest, res) => {
     fee: 0.0, // Zero interest/fee employee benefit policy
     status: 'COMPLETED',
     disbursedAt: new Date().toISOString(),
-    transferType: transferType === 'INSTANT_ACH' ? 'INSTANT_ACH' : 'SAME_DAY_PAYPULSE',
+    transferType: transferType === 'INSTANT_UPI' ? 'INSTANT_UPI' : 'SAME_DAY_PAYPULSE',
     destinationAccount: user.bankAccount.accountMasked,
     note: note || 'On-demand wage transfer',
   };
@@ -101,7 +102,7 @@ router.post('/request-advance', authenticateToken, (req: AuthRequest, res) => {
     id: `notif_${Date.now()}`,
     userId,
     title: 'Demo wage advance recorded',
-    message: `A simulated $${numAmount.toFixed(2)} advance was added to the demo ledger. No funds moved.`,
+    message: `A simulated ${formatINR(numAmount)} advance was added to the demo ledger. No funds moved.`,
     type: 'EWA_ADVANCE',
     read: false,
     timestamp: new Date().toISOString(),
@@ -110,7 +111,7 @@ router.post('/request-advance', authenticateToken, (req: AuthRequest, res) => {
 
   return res.status(201).json({
     success: true,
-    message: `Demo advance of $${numAmount.toFixed(2)} recorded. No funds moved.`,
+    message: `Demo advance of ${formatINR(numAmount)} recorded. No funds moved.`,
     transaction: newTx,
     updatedSummary: computeUserWageSummary(userId),
   });

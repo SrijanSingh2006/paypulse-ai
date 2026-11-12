@@ -24,6 +24,7 @@ import { Api } from '../api/endpoints';
 import { useAuth } from '../context/AuthContext';
 import { useApp } from '../context/AppContext';
 import { EwaSummary, ExpenseClaim, Payslip } from '../types';
+import { formatINR } from '../utils/currency';
 
 const QUICK_ACTIONS = [
   {
@@ -51,7 +52,7 @@ const QUICK_ACTIONS = [
     iconBg: 'rgba(59, 130, 246, 0.12)',
     borderColor: 'rgba(59, 130, 246, 0.2)',
     title: 'Allowance Hub',
-    sub: '\$1,200 Cap',
+    sub: '₹50,000 annual cap',
   },
   {
     key: 'payslip',
@@ -86,6 +87,19 @@ export const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) =
   const [refreshing, setRefreshing] = useState(false);
 
   const isManager = user?.role === 'HR_MANAGER';
+  const pendingClaims = expenses.filter((claim) => claim.status === 'PENDING');
+  const approvedClaims = expenses.filter((claim) => claim.status === 'APPROVED' || claim.status === 'DISBURSED');
+  const pendingTotal = pendingClaims.reduce((sum, claim) => sum + claim.amount, 0);
+  const approvedTotal = approvedClaims.reduce((sum, claim) => sum + claim.amount, 0);
+  const educationSpent = approvedClaims
+    .filter((claim) => claim.category === 'EDUCATION_EDTECH')
+    .reduce((sum, claim) => sum + claim.amount, 0);
+  const learningBalance = Math.max(0, 50000 - educationSpent);
+  const now = new Date();
+  let payday = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  if (now.getDate() > payday.getDate()) payday = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+  const paydayLabel = payday.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+  const paydayCountdown = Math.max(0, Math.ceil((payday.getTime() - now.getTime()) / 86400000));
 
   const loadData = async () => {
     try {
@@ -155,7 +169,7 @@ export const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) =
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, wideLayout && styles.scrollContentWide]}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />
         }
@@ -166,6 +180,51 @@ export const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) =
           onRequestAdvance={() => setIsAdvanceModalOpen(true)}
           isLoading={loading}
         />
+
+        {isManager ? (
+          <View style={styles.managerOverview}>
+            <View style={styles.managerOverviewHeading}>
+              <View>
+                <Text style={styles.managerEyebrow}>PEOPLE OPERATIONS</Text>
+                <Text style={styles.managerTitle}>Claims overview</Text>
+              </View>
+              <View style={styles.managerIcon}><Ionicons name="analytics-outline" size={20} color={Colors.primary} /></View>
+            </View>
+            <View style={styles.managerMetricsRow}>
+              <View style={styles.managerMetric}>
+                <Text style={styles.managerMetricValue}>{pendingClaims.length}</Text>
+                <Text style={styles.managerMetricLabel}>Need review</Text>
+              </View>
+              <View style={styles.managerMetricDivider} />
+              <View style={styles.managerMetric}>
+                <Text style={styles.managerMetricValue}>{formatINR(pendingTotal, 0)}</Text>
+                <Text style={styles.managerMetricLabel}>Pending value</Text>
+              </View>
+              <View style={styles.managerMetricDivider} />
+              <View style={styles.managerMetric}>
+                <Text style={styles.managerMetricValue}>{formatINR(approvedTotal, 0)}</Text>
+                <Text style={styles.managerMetricLabel}>Approved this cycle</Text>
+              </View>
+            </View>
+            <TouchableOpacity style={styles.managerAction} onPress={() => navigation.navigate('Expenses')}>
+              <Text style={styles.managerActionText}>Open review queue</Text>
+              <Ionicons name="arrow-forward" size={15} color={Colors.primary} />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.paydayCard}>
+            <View style={styles.paydayIcon}><Ionicons name="calendar-outline" size={20} color={Colors.primary} /></View>
+            <View style={styles.paydayCopy}>
+              <Text style={styles.paydayEyebrow}>PAYDAY OUTLOOK</Text>
+              <Text style={styles.paydayTitle}>Salary expected {paydayLabel}</Text>
+              <Text style={styles.paydaySubtitle}>About {paydayCountdown} days to payday · estimated take-home {formatINR(payslips[0]?.netPay ?? (summary?.monthlySalary ?? 120000) * 0.705, 0)}</Text>
+            </View>
+            <TouchableOpacity style={styles.paydayButton} onPress={() => payslips[0] && setSelectedPayslip(payslips[0])}>
+              <Text style={styles.paydayButtonText}>Payslip</Text>
+              <Ionicons name="chevron-forward" size={14} color={Colors.primary} />
+            </TouchableOpacity>
+          </View>
+        )}
 
         {/* Quick Actions */}
         <Text style={styles.sectionTitle}>Quick Actions</Text>
@@ -205,7 +264,7 @@ export const DashboardScreen: React.FC<{ navigation: any }> = ({ navigation }) =
         {/* Recent Wage Advances */}
         <View style={styles.sectionHeaderRow}>
           <View>
-            <Text style={styles.sectionTitle}>Recent Wage Advances</Text>
+            <Text style={styles.sectionTitle}>Recent wage advances</Text>
           </View>
           <TouchableOpacity
             style={styles.seeAllBtn}
@@ -314,6 +373,138 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 960,
     alignSelf: 'center',
+  },
+  scrollContentWide: {
+    maxWidth: 1120,
+    paddingHorizontal: 30,
+    paddingTop: 22,
+  },
+  paydayCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: Colors.card,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 15,
+    padding: 14,
+    marginBottom: 14,
+  },
+  paydayIcon: {
+    width: 42,
+    height: 42,
+    borderRadius: 13,
+    backgroundColor: Colors.primaryTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paydayCopy: {
+    flex: 1,
+  },
+  paydayEyebrow: {
+    color: Colors.primary,
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 1.1,
+  },
+  paydayTitle: {
+    color: Colors.text,
+    fontSize: 14,
+    fontWeight: '800',
+    marginTop: 3,
+  },
+  paydaySubtitle: {
+    color: Colors.textSecondary,
+    fontSize: 11,
+    marginTop: 3,
+  },
+  paydayButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 9,
+    backgroundColor: Colors.primaryTint,
+  },
+  paydayButtonText: {
+    color: Colors.primary,
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  managerOverview: {
+    backgroundColor: Colors.card,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 14,
+  },
+  managerOverviewHeading: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 14,
+  },
+  managerEyebrow: {
+    color: Colors.primary,
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 1.1,
+  },
+  managerTitle: {
+    color: Colors.text,
+    fontSize: 17,
+    fontWeight: '800',
+    marginTop: 3,
+  },
+  managerIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: Colors.primaryTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  managerMetricsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.background,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 6,
+  },
+  managerMetric: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 3,
+  },
+  managerMetricValue: {
+    color: Colors.text,
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  managerMetricLabel: {
+    color: Colors.textMuted,
+    fontSize: 9,
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  managerMetricDivider: {
+    width: 1,
+    height: 30,
+    backgroundColor: Colors.border,
+  },
+  managerAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 13,
+  },
+  managerActionText: {
+    color: Colors.primary,
+    fontSize: 11,
+    fontWeight: '800',
   },
   sectionTitle: {
     fontSize: 15,

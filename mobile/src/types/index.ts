@@ -41,7 +41,7 @@ export interface EwaTransaction {
   fee: number;
   status: 'PENDING' | 'COMPLETED' | 'CANCELLED';
   disbursedAt: string;
-  transferType: 'INSTANT_ACH' | 'SAME_DAY_PAYPULSE';
+  transferType: 'INSTANT_UPI' | 'SAME_DAY_PAYPULSE';
   destinationAccount: string;
   note: string;
 }

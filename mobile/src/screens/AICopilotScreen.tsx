@@ -24,7 +24,7 @@ interface Message {
 
 const SUGGESTIONS = [
   'How much can I advance today?',
-  'What is my EdTech budget?',
+  'What is my learning allowance?',
   'How does the wage accrual formula work?',
   'Show me my pending expense claims',
 ];
@@ -94,7 +94,7 @@ export const AICopilotScreen: React.FC = () => {
             <Text style={styles.headerTitle}>Benefits Copilot</Text>
             <View style={styles.onlineRow}>
               <View style={styles.onlineDot} />
-              <Text style={styles.onlineText}>PayPulse demo · balance and policy guide</Text>
+            <Text style={styles.onlineText}>Demo workspace · benefits guide</Text>
             </View>
           </View>
         </View>

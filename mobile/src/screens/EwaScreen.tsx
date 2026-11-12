@@ -16,6 +16,7 @@ import { Api } from '../api/endpoints';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { EwaSummary } from '../types';
+import { formatINR } from '../utils/currency';
 
 export const EwaScreen: React.FC = () => {
   const { user } = useAuth();
@@ -67,11 +68,11 @@ export const EwaScreen: React.FC = () => {
           <Text style={styles.cardHeader}>Accrual Formula & Limits</Text>
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>Monthly Base Salary</Text>
-            <Text style={styles.metricValue}>${summary?.monthlySalary.toFixed(2) || '7,200.00'}</Text>
+            <Text style={styles.metricValue}>{formatINR(summary?.monthlySalary ?? 120000)}</Text>
           </View>
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>Daily Accrual Rate (30-day)</Text>
-            <Text style={styles.metricValue}>${summary?.dailyEarnings.toFixed(2) || '240.00'} / day</Text>
+            <Text style={styles.metricValue}>{formatINR(summary?.dailyEarnings ?? 4000)} / day</Text>
           </View>
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>Days Accrued This Cycle</Text>
@@ -80,15 +81,15 @@ export const EwaScreen: React.FC = () => {
           <View style={styles.divider} />
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>Gross Accrued</Text>
-            <Text style={styles.metricValueHighlight}>${summary?.grossAccruedToDate.toFixed(2) || '2,880.00'}</Text>
+            <Text style={styles.metricValueHighlight}>{formatINR(summary?.grossAccruedToDate ?? 52000)}</Text>
           </View>
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>Company Liquidity Cap (50%)</Text>
-            <Text style={styles.metricValue}>${summary?.maxEligibleAccrual.toFixed(2) || '1,440.00'}</Text>
+            <Text style={styles.metricValue}>{formatINR(summary?.maxEligibleAccrual ?? 26000)}</Text>
           </View>
           <View style={styles.metricRow}>
             <Text style={styles.metricLabel}>Disbursed Advance Balance</Text>
-            <Text style={styles.metricValueDanger}>-${summary?.withdrawnToDate.toFixed(2) || '650.00'}</Text>
+            <Text style={styles.metricValueDanger}>−{formatINR(summary?.withdrawnToDate ?? 6500)}</Text>
           </View>
         </View>
 
@@ -97,8 +98,8 @@ export const EwaScreen: React.FC = () => {
           <View style={styles.bankLeft}>
             <Ionicons name="card-outline" size={24} color={Colors.primary} />
             <View>
-              <Text style={styles.bankName}>{summary?.bankAccount.bankName || 'Silicon Valley Bank'}</Text>
-              <Text style={styles.bankAccount}>{summary?.bankAccount.accountMasked || '•••• 4829'} • Checking</Text>
+            <Text style={styles.bankName}>{summary?.bankAccount.bankName || 'HDFC Bank'}</Text>
+              <Text style={styles.bankAccount}>{summary?.bankAccount.accountMasked || '•••• 4829'} • Savings</Text>
             </View>
           </View>
           <View style={styles.verifiedBadge}>
@@ -142,6 +143,9 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
     paddingBottom: 40,
+    width: '100%',
+    maxWidth: 1100,
+    alignSelf: 'center',
   },
   headerTitle: {
     fontSize: 22,

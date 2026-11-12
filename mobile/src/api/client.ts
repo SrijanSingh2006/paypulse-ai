@@ -27,7 +27,7 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
   async (config) => {
     try {
-      const token = await AsyncStorage.getItem('@paypulse_token');
+      const token = await AsyncStorage.getItem('@paypulse_token_v2');
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -48,28 +48,28 @@ export const fallbackStore = {
     role: 'EMPLOYEE' as const,
     designation: 'Senior Mobile Software Engineer',
     department: 'Engineering (FinTech & HR Innovation)',
-    monthlySalary: 7200,
+    monthlySalary: 120000,
     availableWageLimitRatio: 0.5,
     bankAccount: {
-      bankName: 'Silicon Valley Bank / First Republic',
+      bankName: 'HDFC Bank',
       accountMasked: '•••• •••• •••• 4829',
-      routingNumber: '121000358',
+      routingNumber: 'HDFC0004829',
     },
     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
   } as User,
   summary: {
     userId: 'usr_heftin_001',
-    monthlySalary: 7200,
-    dailyEarnings: 240,
-    currentDayOfMonth: 12,
+    monthlySalary: 120000,
+    dailyEarnings: 4000,
+    currentDayOfMonth: 13,
     daysInMonth: 30,
-    grossAccruedToDate: 2880,
-    maxEligibleAccrual: 1440,
-    withdrawnToDate: 650,
-    availableToWithdraw: 790,
+    grossAccruedToDate: 52000,
+    maxEligibleAccrual: 26000,
+    withdrawnToDate: 6500,
+    availableToWithdraw: 19500,
     limitRatioPercentage: 50,
     bankAccount: {
-      bankName: 'Silicon Valley Bank',
+      bankName: 'HDFC Bank',
       accountMasked: '•••• 4829',
       routingNumber: '121000358',
     },
@@ -77,18 +77,18 @@ export const fallbackStore = {
       {
         id: 'tx_ewa_981',
         userId: 'usr_heftin_001',
-        amount: 400.0,
+        amount: 4000.0,
         fee: 0.0,
         status: 'COMPLETED' as const,
         disbursedAt: new Date(Date.now() - 3 * 86400000).toISOString(),
-        transferType: 'INSTANT_ACH' as const,
+        transferType: 'INSTANT_UPI' as const,
         destinationAccount: '•••• 4829',
         note: 'Mid-month grocery & utility buffer',
       },
       {
         id: 'tx_ewa_982',
         userId: 'usr_heftin_001',
-        amount: 250.0,
+        amount: 2500.0,
         fee: 0.0,
         status: 'COMPLETED' as const,
         disbursedAt: new Date(Date.now() - 7 * 86400000).toISOString(),
@@ -105,9 +105,9 @@ export const fallbackStore = {
       employeeName: 'Alex Rivera',
       title: 'Advanced React Native Architecture & Fastlane Certification',
       category: 'EDUCATION_EDTECH' as const,
-      amount: 349.0,
-      currency: 'USD',
-      merchant: 'Frontend Masters & Meta Certification',
+      amount: 8999,
+      currency: 'INR',
+      merchant: 'Frontend Masters · Meta Certification',
       date: '2026-11-04',
       receiptUrl: 'https://images.unsplash.com/photo-1554415707-9e4901f46487?w=400&auto=format&fit=crop&q=80',
       status: 'APPROVED' as const,
@@ -120,9 +120,9 @@ export const fallbackStore = {
       employeeName: 'Alex Rivera',
       title: 'Client Onsite Travel: Off-peak Train Tickets',
       category: 'TRAVEL' as const,
-      amount: 88.5,
-      currency: 'USD',
-      merchant: 'Amtrak Acela Regional',
+      amount: 2450,
+      currency: 'INR',
+      merchant: 'Indian Railways · Vande Bharat',
       date: '2026-11-08',
       receiptUrl: 'https://images.unsplash.com/photo-1554415707-9e4901f46487?w=400&auto=format&fit=crop&q=80',
       status: 'PENDING' as const,
@@ -135,9 +135,9 @@ export const fallbackStore = {
       employeeName: 'Alex Rivera',
       title: 'Ergonomic Mechanical Keyboard (Keychron K8 Pro)',
       category: 'HARDWARE_OFFICE' as const,
-      amount: 129.99,
-      currency: 'USD',
-      merchant: 'Keychron Official Store',
+      amount: 6499,
+      currency: 'INR',
+      merchant: 'Keychron India Store',
       date: '2026-11-10',
       receiptUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&auto=format&fit=crop&q=80',
       status: 'PENDING' as const,
@@ -150,7 +150,7 @@ export const fallbackStore = {
       id: 'notif_001',
       userId: 'usr_heftin_001',
       title: 'Salary Advance Disbursed ⚡',
-      message: '$400.00 was deposited into your checking account ending in 4829.',
+      message: '₹4,000.00 was added to your HDFC Bank demo ledger ending in 4829.',
       type: 'EWA_ADVANCE' as const,
       read: true,
       timestamp: new Date(Date.now() - 3 * 86400000).toISOString(),
@@ -159,7 +159,7 @@ export const fallbackStore = {
       id: 'notif_002',
       userId: 'usr_heftin_001',
       title: 'EdTech Claim Approved 🎉',
-      message: 'Your claim for "$349.00 - React Native Architecture" was approved by Sarah Chen.',
+      message: 'Your claim for "₹8,999.00 - React Native Architecture" was approved by Sarah Chen.',
       type: 'EXPENSE_UPDATE' as const,
       read: false,
       timestamp: new Date(Date.now() - 2 * 86400000).toISOString(),
@@ -180,12 +180,12 @@ export const fallbackStore = {
       userId: 'usr_heftin_001',
       month: 'October 2026',
       payPeriod: 'Oct 01, 2026 - Oct 31, 2026',
-      grossPay: 7200.0,
-      earnedWageWithdrawn: 650.0,
-      taxDeduction: 1440.0,
-      insuranceDeduction: 280.0,
-      providentFund: 432.0,
-      netPay: 4398.0,
+      grossPay: 120000,
+      earnedWageWithdrawn: 6500,
+      taxDeduction: 12000,
+      insuranceDeduction: 2500,
+      providentFund: 14400,
+      netPay: 84600,
       payoutDate: '2026-10-31',
       status: 'PROCESSED' as const,
     },
@@ -201,12 +201,12 @@ const demoUsers: Record<'EMPLOYEE' | 'HR_MANAGER', User> = {
     role: 'HR_MANAGER',
     designation: 'VP of People & Culture',
     department: 'Human Resources & Operations',
-    monthlySalary: 9500,
+    monthlySalary: 180000,
     availableWageLimitRatio: 0.5,
     bankAccount: {
-      bankName: 'JPMorgan Chase',
+      bankName: 'ICICI Bank',
       accountMasked: '•••• 9012',
-      routingNumber: '021000021',
+      routingNumber: 'ICIC0009012',
     },
     avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80',
   },
@@ -221,7 +221,7 @@ const createDemoSummary = (user: User): EwaSummary => {
   const maxEligibleAccrual = grossAccruedToDate * user.availableWageLimitRatio;
   const isEmployee = user.role === 'EMPLOYEE';
   const transactions = isEmployee ? fallbackStore.summary.transactions : [];
-  const withdrawnToDate = isEmployee ? 650 : 0;
+  const withdrawnToDate = isEmployee ? 6500 : 0;
 
   return {
     userId: user.id,
@@ -248,7 +248,7 @@ let activeDemoRole: 'EMPLOYEE' | 'HR_MANAGER' = 'EMPLOYEE';
 let demoStoreReady = false;
 let demoStoreHydration: Promise<void> | null = null;
 
-const DEMO_STORE_KEY = '@paypulse_demo_state_v1';
+const DEMO_STORE_KEY = '@paypulse_demo_state_v2';
 
 export async function hydrateDemoStore(): Promise<void> {
   if (!isWebProduction || demoStoreReady) return;

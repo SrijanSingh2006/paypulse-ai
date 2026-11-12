@@ -1,8 +1,9 @@
 import React from 'react';
-import { Modal, View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Modal, View, Text, StyleSheet, TouchableOpacity, Platform, Share } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { Payslip } from '../types';
+import { formatINR } from '../utils/currency';
 
 interface PayslipModalProps {
   payslip: Payslip | null;
@@ -12,11 +13,36 @@ interface PayslipModalProps {
 export const PayslipModal: React.FC<PayslipModalProps> = ({ payslip, onClose }) => {
   if (!payslip) return null;
 
-  const handleDownload = () => {
-    Alert.alert(
-      'Exporting Payslip PDF',
-      `Official PayPulse PDF for ${payslip.month} generated with cryptographic signature.`
-    );
+  const handleExport = async () => {
+    const rows = [
+      ['PayPulse demo payslip', payslip.month],
+      ['Pay period', payslip.payPeriod],
+      ['Gross salary', formatINR(payslip.grossPay)],
+      ['Income tax and TDS', `-${formatINR(payslip.taxDeduction)}`],
+      ['Health insurance', `-${formatINR(payslip.insuranceDeduction)}`],
+      ['Employee Provident Fund', `-${formatINR(payslip.providentFund)}`],
+      ['Earned wage advance', `-${formatINR(payslip.earnedWageWithdrawn)}`],
+      ['Net pay', formatINR(payslip.netPay)],
+      ['Payout date', payslip.payoutDate],
+      ['Status', payslip.status],
+    ];
+    const csv = rows.map((row) => row.map((value) => `"${value.replace(/"/g, '""')}"`).join(',')).join('\n');
+    const fileName = `paypulse-payslip-${payslip.month.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.csv`;
+
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' });
+      const href = URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = href;
+      anchor.download = fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      URL.revokeObjectURL(href);
+      return;
+    }
+
+    await Share.share({ title: `${payslip.month} PayPulse payslip`, message: csv });
   };
 
   return (
@@ -37,22 +63,22 @@ export const PayslipModal: React.FC<PayslipModalProps> = ({ payslip, onClose }) 
           {/* Gross Box */}
           <View style={styles.grossBox}>
             <Text style={styles.grossLabel}>Total Gross Salary</Text>
-            <Text style={styles.grossAmount}>${payslip.grossPay.toFixed(2)}</Text>
+            <Text style={styles.grossAmount}>{formatINR(payslip.grossPay)}</Text>
           </View>
 
           {/* Breakdown Items */}
           <View style={styles.breakdownList}>
             <View style={styles.row}>
-              <Text style={styles.rowLabel}>Federal & State Tax</Text>
-              <Text style={styles.deductionText}>-${payslip.taxDeduction.toFixed(2)}</Text>
+              <Text style={styles.rowLabel}>Income tax & TDS</Text>
+              <Text style={styles.deductionText}>−{formatINR(payslip.taxDeduction)}</Text>
             </View>
             <View style={styles.row}>
               <Text style={styles.rowLabel}>Health & Vision Insurance</Text>
-              <Text style={styles.deductionText}>-${payslip.insuranceDeduction.toFixed(2)}</Text>
+              <Text style={styles.deductionText}>−{formatINR(payslip.insuranceDeduction)}</Text>
             </View>
             <View style={styles.row}>
-              <Text style={styles.rowLabel}>Provident Fund / 401(k)</Text>
-              <Text style={styles.deductionText}>-${payslip.providentFund.toFixed(2)}</Text>
+              <Text style={styles.rowLabel}>Employee Provident Fund</Text>
+              <Text style={styles.deductionText}>−{formatINR(payslip.providentFund)}</Text>
             </View>
             {payslip.earnedWageWithdrawn > 0 && (
               <View style={styles.row}>
@@ -60,7 +86,7 @@ export const PayslipModal: React.FC<PayslipModalProps> = ({ payslip, onClose }) 
                   <Text style={styles.rowLabel}>EWA Wage Advances Deducted</Text>
                   <Text style={styles.badgeZeroFee}>0% fee</Text>
                 </View>
-                <Text style={styles.deductionText}>-${payslip.earnedWageWithdrawn.toFixed(2)}</Text>
+                <Text style={styles.deductionText}>−{formatINR(payslip.earnedWageWithdrawn)}</Text>
               </View>
             )}
           </View>
@@ -71,13 +97,13 @@ export const PayslipModal: React.FC<PayslipModalProps> = ({ payslip, onClose }) 
               <Text style={styles.netLabel}>Net Disbursed Take-Home</Text>
               <Text style={styles.payoutDate}>Disbursed on {payslip.payoutDate}</Text>
             </View>
-            <Text style={styles.netAmount}>${payslip.netPay.toFixed(2)}</Text>
+            <Text style={styles.netAmount}>{formatINR(payslip.netPay)}</Text>
           </View>
 
-          {/* PDF Download Button */}
-          <TouchableOpacity style={styles.pdfBtn} onPress={handleDownload} activeOpacity={0.8}>
+          {/* Export Button */}
+          <TouchableOpacity style={styles.pdfBtn} onPress={handleExport} activeOpacity={0.8}>
             <Ionicons name="download-outline" size={18} color={Colors.text} />
-            <Text style={styles.pdfBtnText}>Download Signed PDF Slip</Text>
+            <Text style={styles.pdfBtnText}>Export payslip summary</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -88,7 +114,7 @@ export const PayslipModal: React.FC<PayslipModalProps> = ({ payslip, onClose }) 
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'rgba(17, 35, 28, 0.35)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,

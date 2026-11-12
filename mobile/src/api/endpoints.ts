@@ -7,6 +7,7 @@ import {
   setDemoRole,
 } from './client';
 import { User, EwaSummary, ExpenseClaim, AppNotification, Payslip, ReleaseInfo } from '../types';
+import { formatINR } from '../utils/currency';
 
 const shouldUseOfflineFallback = (error: any) => !error?.response || error.response.status >= 500;
 
@@ -21,10 +22,10 @@ const ensureDemoPayslip = () => {
     payPeriod: 'Oct 01, 2026 - Oct 31, 2026',
     grossPay: fallbackStore.user.monthlySalary,
     earnedWageWithdrawn: 0,
-    taxDeduction: 1900,
-    insuranceDeduction: 280,
-    providentFund: 570,
-    netPay: 6750,
+    taxDeduction: 18000,
+    insuranceDeduction: 3750,
+    providentFund: 21600,
+    netPay: 136650,
     payoutDate: '2026-10-31',
     status: 'PROCESSED',
   });
@@ -33,8 +34,13 @@ const ensureDemoPayslip = () => {
 export const Api = {
   // Auth
   async login(email: string, password?: string): Promise<{ token: string; user: User }> {
+    const normalizedEmail = email.trim().toLowerCase();
+    const allowedAccounts = ['employee@heftin.ai', 'manager@heftin.ai'];
+    if (!allowedAccounts.includes(normalizedEmail) || password !== 'password123') {
+      throw new Error('Use a demo account and password shown below the sign-in form.');
+    }
     if (isWebProduction) {
-      const role = email.toLowerCase().includes('manager') ? 'HR_MANAGER' : 'EMPLOYEE';
+      const role = normalizedEmail.includes('manager') ? 'HR_MANAGER' : 'EMPLOYEE';
       const mockUser = await setDemoRole(role);
       return {
         token: 'mock_jwt_token_demo_mode',
@@ -44,13 +50,13 @@ export const Api = {
 
     try {
       const res = await apiClient.post('/auth/login', { email, password });
-      const role = email.toLowerCase().includes('manager') ? 'HR_MANAGER' : 'EMPLOYEE';
+      const role = normalizedEmail.includes('manager') ? 'HR_MANAGER' : 'EMPLOYEE';
       await setDemoRole(role);
       return res.data;
     } catch (e) {
       if (!shouldUseOfflineFallback(e)) throw e;
       console.log('[API Offline Fallback] login fallback activated');
-      const role = email.toLowerCase().includes('manager') ? 'HR_MANAGER' : 'EMPLOYEE';
+      const role = normalizedEmail.includes('manager') ? 'HR_MANAGER' : 'EMPLOYEE';
       const mockUser = await setDemoRole(role);
 
       return {
@@ -98,7 +104,7 @@ export const Api = {
     }
     if (isWebProduction) await hydrateDemoStore();
     if (amount > fallbackStore.summary.availableToWithdraw) {
-      throw new Error(`Maximum available is $${fallbackStore.summary.availableToWithdraw.toFixed(2)}.`);
+      throw new Error(`Maximum available is ${formatINR(fallbackStore.summary.availableToWithdraw)}.`);
     }
 
     if (isWebProduction) {
@@ -119,7 +125,7 @@ export const Api = {
         id: `notif_ewa_${Date.now()}`,
         userId: fallbackStore.user.id,
         title: 'Demo advance recorded',
-        message: `A simulated $${amount.toFixed(2)} advance was added to your ledger. No funds moved.`,
+        message: `A simulated ${formatINR(amount)} advance was added to your ledger. No funds moved.`,
         type: 'EWA_ADVANCE',
         read: false,
         timestamp: new Date().toISOString(),
@@ -127,7 +133,7 @@ export const Api = {
       await persistDemoStore();
       return {
         success: true,
-        message: `Simulated $${amount.toFixed(2)} disbursement recorded via ${transferType}.`,
+        message: `Simulated ${formatINR(amount)} disbursement recorded via ${transferType}.`,
         updatedSummary: { ...fallbackStore.summary },
       };
     }
@@ -154,7 +160,7 @@ export const Api = {
         id: `notif_ewa_${Date.now()}`,
         userId: fallbackStore.user.id,
         title: 'Demo advance recorded',
-        message: `A simulated $${amount.toFixed(2)} advance was added to your ledger. No funds moved.`,
+        message: `A simulated ${formatINR(amount)} advance was added to your ledger. No funds moved.`,
         type: 'EWA_ADVANCE',
         read: false,
         timestamp: new Date().toISOString(),
@@ -162,7 +168,7 @@ export const Api = {
       await persistDemoStore();
       return {
         success: true,
-        message: `Simulated $${amount.toFixed(2)} disbursement recorded via ${transferType}.`,
+        message: `Simulated ${formatINR(amount)} disbursement recorded via ${transferType}.`,
         updatedSummary: { ...fallbackStore.summary },
       };
     }
@@ -207,7 +213,7 @@ export const Api = {
         title: data.title,
         category: data.category as any,
         amount: data.amount,
-        currency: 'USD',
+        currency: 'INR',
         merchant: data.merchant,
         date: new Date().toISOString().split('T')[0],
         receiptUrl: data.receiptUrl,
@@ -220,7 +226,7 @@ export const Api = {
           id: `notif_claim_${Date.now()}`,
           userId: 'usr_heftin_002',
           title: 'New expense claim',
-          message: `${newClaim.employeeName} submitted a $${newClaim.amount.toFixed(2)} claim for review.`,
+          message: `${newClaim.employeeName} submitted a ${formatINR(newClaim.amount)} claim for review.`,
           type: 'EXPENSE_UPDATE',
           read: false,
           timestamp: new Date().toISOString(),
@@ -241,7 +247,7 @@ export const Api = {
         title: data.title,
         category: data.category as any,
         amount: data.amount,
-        currency: 'USD',
+        currency: 'INR',
         merchant: data.merchant,
         date: new Date().toISOString().split('T')[0],
         receiptUrl: data.receiptUrl,
@@ -254,7 +260,7 @@ export const Api = {
           id: `notif_claim_${Date.now()}`,
           userId: 'usr_heftin_002',
           title: 'New expense claim',
-          message: `${newClaim.employeeName} submitted a $${newClaim.amount.toFixed(2)} claim for review.`,
+          message: `${newClaim.employeeName} submitted a ${formatINR(newClaim.amount)} claim for review.`,
           type: 'EXPENSE_UPDATE',
           read: false,
           timestamp: new Date().toISOString(),
@@ -371,7 +377,7 @@ export const Api = {
     const edTechSpent = fallbackStore.claims
       .filter((claim) => claim.userId === fallbackStore.user.id && claim.category === 'EDUCATION_EDTECH' && claim.status !== 'REJECTED')
       .reduce((total, claim) => total + claim.amount, 0);
-    const edTechRemaining = Math.max(0, 1200 - edTechSpent);
+    const edTechRemaining = Math.max(0, 50000 - edTechSpent);
     const visibleClaims = fallbackStore.user.role === 'HR_MANAGER'
       ? fallbackStore.claims
       : fallbackStore.claims.filter((claim) => claim.userId === fallbackStore.user.id);
@@ -380,24 +386,24 @@ export const Api = {
     if (isWebProduction) {
       if (query.includes('advance') || query.includes('withdraw') || query.includes('wage')) {
         return {
-          reply: `You have **$${summary.availableToWithdraw.toFixed(2)}** available in the demo wage ledger ($${summary.grossAccruedToDate.toFixed(2)} accrued out of $${summary.monthlySalary.toFixed(2)}). No real funds move.`,
+          reply: `You have **${formatINR(summary.availableToWithdraw)}** available in the demo wage ledger (${formatINR(summary.grossAccruedToDate)} accrued out of ${formatINR(summary.monthlySalary)}). No real funds move.`,
           suggestedActions: ['Request Instant Advance', 'View Accrual Breakdown'],
         };
       }
       if (query.includes('edtech') || query.includes('perk') || query.includes('learning')) {
         return {
-          reply: `Heftin AI provides an annual $1,200.00 EdTech perk. You have used $${edTechSpent.toFixed(2)}, leaving $${edTechRemaining.toFixed(2)} for eligible courses, certifications, and books.`,
+          reply: `The annual learning allowance is ${formatINR(50000)}. You have used ${formatINR(edTechSpent)}, leaving ${formatINR(edTechRemaining)} for eligible courses, certifications, and books.`,
           suggestedActions: ['Submit EdTech Claim', 'Expense Policy FAQ'],
         };
       }
       if (query.includes('tax') || query.includes('payslip') || query.includes('salary')) {
         return {
-          reply: `Your monthly base salary is $${fallbackStore.user.monthlySalary.toFixed(2)}. Open your Profile tab to review the latest demo payslip breakdown.`,
+          reply: `Your monthly base salary is ${formatINR(fallbackStore.user.monthlySalary)}. Open your Profile tab to review the latest demo payslip breakdown.`,
           suggestedActions: ['Open Payslip', 'Available Advance Balance'],
         };
       }
       return {
-        reply: `Hello ${fallbackStore.user.name}! I'm your Heftin PayPulse AI Copilot. You can ask about your available wage advance ($${summary.availableToWithdraw.toFixed(2)}), EdTech balance ($${edTechRemaining.toFixed(2)}), or expense reimbursement policy. You have ${pendingClaims} pending expense claim${pendingClaims === 1 ? '' : 's'}.`,
+        reply: `Hello ${fallbackStore.user.name}! I'm your PayPulse benefits copilot. You can ask about your available wage advance (${formatINR(summary.availableToWithdraw)}), learning allowance (${formatINR(edTechRemaining)}), or expense reimbursement policy. You have ${pendingClaims} pending expense claim${pendingClaims === 1 ? '' : 's'}.`,
         suggestedActions: ['Available Advance Balance', 'EdTech Perk Balance', 'Pending Expense Claims'],
       };
     }
@@ -410,7 +416,7 @@ export const Api = {
       if (!shouldUseOfflineFallback(e) && e.response?.status !== 404) throw e;
       if (query.includes('edtech') || query.includes('perk') || query.includes('learning') || query.includes('course') || query.includes('allowance')) {
         return {
-          reply: `Heftin AI provides an annual $1,200.00 EdTech perk. You have used $${edTechSpent.toFixed(2)}, leaving $${edTechRemaining.toFixed(2)} for eligible courses, certifications, and books.`,
+          reply: `The annual learning allowance is ${formatINR(50000)}. You have used ${formatINR(edTechSpent)}, leaving ${formatINR(edTechRemaining)} for eligible courses, certifications, and books.`,
           suggestedActions: ['Submit EdTech Claim', 'Expense Policy FAQ'],
         };
       }
@@ -422,12 +428,12 @@ export const Api = {
       }
       if (query.includes('payslip') || query.includes('tax') || query.includes('salary') || query.includes('deduction')) {
         return {
-          reply: `Your monthly base salary is $${fallbackStore.user.monthlySalary.toFixed(2)}. The latest demo payslip is available in the Profile tab.`,
+          reply: `Your monthly base salary is ${formatINR(fallbackStore.user.monthlySalary)}. The latest demo payslip is available in the Profile tab.`,
           suggestedActions: ['Open Payslip', 'Available Advance Balance'],
         };
       }
       return {
-        reply: `You have $${summary.availableToWithdraw.toFixed(2)} available in the demo advance ledger. No real funds move. Your EdTech balance is $${edTechRemaining.toFixed(2)}.`,
+        reply: `You have ${formatINR(summary.availableToWithdraw)} available in the demo advance ledger. No real funds move. Your learning allowance balance is ${formatINR(edTechRemaining)}.`,
         suggestedActions: ['Request Instant Advance', 'EdTech Perk Balance', 'Pending Expense Claims'],
       };
     }
@@ -437,17 +443,17 @@ export const Api = {
   async checkVersion(): Promise<ReleaseInfo> {
     if (isWebProduction) {
       return {
-        latestVersion: '2.4.0',
-        buildNumber: 104,
+        latestVersion: '2.5.0',
+        buildNumber: 105,
         minimumRequiredVersion: '2.0.0',
         forceUpdate: false,
         updateRecommended: false,
         releaseDate: new Date().toISOString(),
         whatsNew: [
-          '⚡ Wage accrual with an interactive demo advance ledger',
-          '📸 Expense claims with optional receipt attachment and HR review',
-          '✨ Benefits Copilot for wage, payslip, and policy questions',
-          '🔁 Employee and manager demo roles with separate wage balances',
+          '☀️ Responsive light workspace with employee and HR manager sign-in',
+          '₹ Indian rupee wage, reimbursement, and allowance ledger',
+          '🔎 Claim search and status filters with receipt review',
+          '📅 Payday outlook and downloadable payslip summary',
         ],
         storeUrl: '',
         environment: 'portfolio-demo',
@@ -459,17 +465,17 @@ export const Api = {
     } catch (e) {
       if (!shouldUseOfflineFallback(e)) throw e;
       return {
-        latestVersion: '2.4.0',
-        buildNumber: 104,
+        latestVersion: '2.5.0',
+        buildNumber: 105,
         minimumRequiredVersion: '2.0.0',
         forceUpdate: false,
         updateRecommended: false,
         releaseDate: new Date().toISOString(),
         whatsNew: [
-          '⚡ Wage accrual with an interactive demo advance ledger',
-          '📸 Expense claims with optional receipt attachment and HR review',
-          '✨ Benefits Copilot for wage, payslip, and policy questions',
-          '🔁 Employee and manager demo roles with separate wage balances',
+          '☀️ Responsive light workspace with employee and HR manager sign-in',
+          '₹ Indian rupee wage, reimbursement, and allowance ledger',
+          '🔎 Claim search and status filters with receipt review',
+          '📅 Payday outlook and downloadable payslip summary',
         ],
         storeUrl: '',
         environment: 'portfolio-demo',

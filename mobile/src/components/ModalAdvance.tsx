@@ -14,6 +14,7 @@ import * as Haptics from 'expo-haptics';
 import { Colors } from '../theme/colors';
 import { Api } from '../api/endpoints';
 import { EwaSummary } from '../types';
+import { formatINR } from '../utils/currency';
 
 interface ModalAdvanceProps {
   visible: boolean;
@@ -28,9 +29,9 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
   summary,
   onSuccess,
 }) => {
-  const maxAvailable = summary?.availableToWithdraw ?? 790;
-  const [amount, setAmount] = useState<string>('200');
-  const [transferType, setTransferType] = useState<'INSTANT_ACH' | 'SAME_DAY_PAYPULSE'>('INSTANT_ACH');
+  const maxAvailable = summary?.availableToWithdraw ?? 19500;
+  const [amount, setAmount] = useState<string>('10000');
+  const [transferType, setTransferType] = useState<'INSTANT_UPI' | 'SAME_DAY_PAYPULSE'>('INSTANT_UPI');
   const [note, setNote] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +49,7 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
       return;
     }
     if (numAmount > maxAvailable) {
-      Alert.alert('Exceeds Limit', `Maximum available is $${maxAvailable.toFixed(2)}.`);
+      Alert.alert('Exceeds Limit', `Maximum available is ${formatINR(maxAvailable)}.`);
       return;
     }
 
@@ -59,7 +60,7 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert(
         'Demo advance recorded ⚡',
-        `A simulated $${numAmount.toFixed(2)} advance was added to the demo ledger. No funds were moved.`
+        `A simulated ${formatINR(numAmount)} advance was added to the demo ledger. No funds were moved.`
       );
       onSuccess(res.updatedSummary);
       onClose();
@@ -79,7 +80,7 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
             <View>
               <Text style={styles.title}>Simulate Wage Advance</Text>
               <Text style={styles.subtitle}>
-                Available to withdraw: <Text style={styles.highlight}>${maxAvailable.toFixed(2)}</Text>
+                Available to withdraw: <Text style={styles.highlight}>{formatINR(maxAvailable)}</Text>
               </Text>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
@@ -89,7 +90,7 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
 
           {/* Amount Input */}
           <View style={styles.inputContainer}>
-            <Text style={styles.currencyPrefix}>$</Text>
+            <Text style={styles.currencyPrefix}>₹</Text>
             <TextInput
               style={styles.amountInput}
               keyboardType="numeric"
@@ -102,14 +103,14 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
 
           {/* Quick Presets */}
           <View style={styles.presetsRow}>
-            {[100, 200, 400].map((val) => (
+            {[5000, 10000, 15000].map((val) => (
               <TouchableOpacity
                 key={val}
                 style={[styles.presetBtn, numAmount === val && styles.activePreset]}
                 onPress={() => handleSelectPreset(val)}
               >
                 <Text style={[styles.presetText, numAmount === val && styles.activePresetText]}>
-                  ${val}
+                  {formatINR(val, 0)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -129,20 +130,20 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
             <TouchableOpacity
               style={[
                 styles.optionCard,
-                transferType === 'INSTANT_ACH' && styles.optionCardActive,
+                transferType === 'INSTANT_UPI' && styles.optionCardActive,
               ]}
-              onPress={() => setTransferType('INSTANT_ACH')}
+              onPress={() => setTransferType('INSTANT_UPI')}
             >
               <Ionicons
                 name="flash"
                 size={20}
-                color={transferType === 'INSTANT_ACH' ? Colors.primary : Colors.textMuted}
+                color={transferType === 'INSTANT_UPI' ? Colors.primary : Colors.textMuted}
               />
               <View style={styles.optionContent}>
-                <Text style={styles.optionTitle}>Instant RTP / ACH</Text>
-                <Text style={styles.optionDesc}>Under 2 minutes • 0% Fee</Text>
+                <Text style={styles.optionTitle}>Instant UPI demo</Text>
+                <Text style={styles.optionDesc}>Instant demo ledger update · 0% fee</Text>
               </View>
-              {transferType === 'INSTANT_ACH' && (
+              {transferType === 'INSTANT_UPI' && (
                 <Ionicons name="checkmark-circle" size={18} color={Colors.primary} />
               )}
             </TouchableOpacity>
@@ -160,8 +161,8 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
                 color={transferType === 'SAME_DAY_PAYPULSE' ? Colors.primary : Colors.textMuted}
               />
               <View style={styles.optionContent}>
-                <Text style={styles.optionTitle}>Same-Day Standard</Text>
-                <Text style={styles.optionDesc}>By 5:00 PM EST • 0% Fee</Text>
+                <Text style={styles.optionTitle}>End-of-day settlement</Text>
+                <Text style={styles.optionDesc}>Same-day demo ledger update · 0% fee</Text>
               </View>
               {transferType === 'SAME_DAY_PAYPULSE' && (
                 <Ionicons name="checkmark-circle" size={18} color={Colors.primary} />
@@ -191,7 +192,7 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
               <>
                 <Ionicons name="arrow-forward-circle" size={20} color={Colors.onPrimary} />
                 <Text style={styles.disburseText}>
-                  Disburse ${numAmount > 0 ? numAmount.toFixed(2) : '0.00'} Now
+                  Disburse {formatINR(numAmount)} Now
                 </Text>
               </>
             )}

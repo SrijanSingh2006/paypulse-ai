@@ -9,12 +9,15 @@ PayPulse AI is a cross-platform employee benefits demo for earned wage access, e
 
 ## Features
 
-- Daily wage accrual, an eligible advance limit, and a simulated transfer ledger.
-- Expense claims with optional receipt attachments, allowance tracking, and manager review.
-- Employee and HR manager views with payslips and in-app notifications.
-- A rule-based Benefits Copilot for wage, payroll, expense, and allowance questions.
+- Responsive light dashboard with a desktop workspace sidebar and mobile tabs.
+- Employee and HR manager sign-in, role previews, and session persistence.
+- INR wage accrual, simulated UPI advances, and an annual learning allowance.
+- Expense claims with receipt uploads, search, status filters, and manager approvals.
+- Payday outlook, payslip breakdown and CSV export, notifications, and a rule-based Benefits Copilot.
 
-The demo opens as Alex Rivera (employee). Use **Switch: Mgr** in the header to view Sarah Chen's manager workspace.
+### Demo sign-in
+
+Use `employee@heftin.ai` or `manager@heftin.ai` with password `password123`. The manager account can approve or reject expense claims.
 
 ## Tech stack
 
@@ -35,7 +38,7 @@ flowchart LR
   Demo --> Copilot[Rule-based Benefits Copilot]
 ```
 
-The hosted web demo stores its workspace in the browser. The API uses sample in-memory data, which may reset when a serverless instance restarts.
+All figures use Indian rupees (INR). The hosted web demo stores its workspace in browser storage. The API uses sample in-memory data, which may reset when a serverless instance restarts.
 
 ## Run locally
 
