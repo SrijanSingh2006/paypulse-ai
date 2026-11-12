@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "PayPulse HR & FinTech",
+    "name": "PayPulse AI",
     "slug": "paypulse-mobile",
     "version": "2.4.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0F172A"
+      "backgroundColor": "#F4F7F6"
     },
     "ios": {
       "supportsTablet": true,
@@ -24,7 +24,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0F172A"
+        "backgroundColor": "#F4F7F6"
       },
       "package": "ai.heftin.paypulse",
       "versionCode": 104,

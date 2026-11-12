@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   approveText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#0B0F19',
+    color: Colors.onPrimary,
   },
 });
 

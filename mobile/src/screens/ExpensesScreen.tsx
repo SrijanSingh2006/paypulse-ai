@@ -172,7 +172,7 @@ export const ExpensesScreen: React.FC = () => {
         onPress={() => setIsExpenseModalOpen(true)}
         activeOpacity={0.85}
       >
-        <Ionicons name="add" size={26} color="#0B0F19" />
+        <Ionicons name="add" size={26} color={Colors.onPrimary} />
       </TouchableOpacity>
 
       {/* Submit Claim Modal */}
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
   },
   activeFilterChipText: {
-    color: '#0B0F19',
+    color: Colors.onPrimary,
     fontWeight: '700',
   },
   listSection: {

@@ -64,7 +64,7 @@ export const ProfileSettingsScreen: React.FC = () => {
             style={[styles.roleBtn, !isManager && styles.roleBtnActive]}
             onPress={() => switchRole('EMPLOYEE')}
           >
-            <Ionicons name="person" size={16} color={!isManager ? '#0B0F19' : Colors.textSecondary} />
+            <Ionicons name="person" size={16} color={!isManager ? Colors.onPrimary : Colors.textSecondary} />
             <Text style={[styles.roleBtnText, !isManager && styles.roleBtnTextActive]}>
               Alex (Employee)
             </Text>
@@ -74,7 +74,7 @@ export const ProfileSettingsScreen: React.FC = () => {
             style={[styles.roleBtn, isManager && styles.roleBtnActive]}
             onPress={() => switchRole('HR_MANAGER')}
           >
-            <Ionicons name="shield-checkmark" size={16} color={isManager ? '#0B0F19' : Colors.textSecondary} />
+            <Ionicons name="shield-checkmark" size={16} color={isManager ? Colors.onPrimary : Colors.textSecondary} />
             <Text style={[styles.roleBtnText, isManager && styles.roleBtnTextActive]}>
               Sarah (HR Manager)
             </Text>
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
   },
   roleBtnTextActive: {
-    color: '#0B0F19',
+    color: Colors.onPrimary,
   },
   cardGroup: {
     backgroundColor: Colors.card,

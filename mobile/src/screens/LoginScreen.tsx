@@ -108,10 +108,10 @@ export const LoginScreen: React.FC = () => {
             activeOpacity={0.85}
           >
             {isLoading ? (
-              <ActivityIndicator color="#0B0F19" />
+              <ActivityIndicator color={Colors.onPrimary} />
             ) : (
               <>
-                <Ionicons name="log-in-outline" size={18} color="#0B0F19" />
+                <Ionicons name="log-in-outline" size={18} color={Colors.onPrimary} />
                 <Text style={styles.loginBtnText}>Continue to Demo</Text>
               </>
             )}
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   loginBtnText: {
-    color: '#0B0F19',
+    color: Colors.onPrimary,
     fontSize: 15,
     fontWeight: '800',
   },

@@ -5,22 +5,22 @@ import { StatusBar } from 'expo-status-bar';
 import { AuthProvider } from './src/context/AuthContext';
 import { AppProvider } from './src/context/AppContext';
 import { AppNavigator } from './src/navigation/AppNavigator';
+import { Colors } from './src/theme/colors';
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      {/* Force dark background on web so the root container isn't light gray */}
       <View
         style={{
           flex: 1,
           width: '100%',
           maxWidth: 1440,
           alignSelf: 'center',
-          backgroundColor: '#0B0F19',
+          backgroundColor: Colors.background,
           ...(Platform.OS === 'web' ? { minHeight: '100vh' as any } : {}),
         }}
       >
-        <StatusBar style="light" />
+        <StatusBar style="dark" />
         <AuthProvider>
           <AppProvider>
             <AppNavigator />

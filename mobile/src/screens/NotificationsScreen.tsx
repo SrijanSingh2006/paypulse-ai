@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   unreadCard: {
     borderColor: 'rgba(16, 185, 129, 0.4)',
-    backgroundColor: 'rgba(22, 31, 48, 0.95)',
+    backgroundColor: Colors.primaryTint,
   },
   iconCircle: {
     width: 40,

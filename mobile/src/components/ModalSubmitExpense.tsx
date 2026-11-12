@@ -208,10 +208,10 @@ export const ModalSubmitExpense: React.FC<ModalSubmitExpenseProps> = ({
               activeOpacity={0.85}
             >
               {loading ? (
-                <ActivityIndicator color="#0B0F19" />
+                <ActivityIndicator color={Colors.onPrimary} />
               ) : (
                 <>
-                  <Ionicons name="paper-plane" size={18} color="#0B0F19" />
+                  <Ionicons name="paper-plane" size={18} color={Colors.onPrimary} />
                   <Text style={styles.submitBtnText}>Submit Claim for Approval</Text>
                 </>
               )}
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   submitBtnText: {
-    color: '#0B0F19',
+    color: Colors.onPrimary,
     fontSize: 15,
     fontWeight: '800',
   },

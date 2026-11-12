@@ -114,7 +114,7 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
         disabled={available <= 0 || isLoading}
         activeOpacity={0.85}
       >
-        <Ionicons name="flash" size={18} color="#0B0F19" />
+        <Ionicons name="flash" size={18} color={Colors.onPrimary} />
         <Text style={styles.advanceButtonText}>
           {available > 0 ? 'Simulate Wage Advance' : 'Advance Limit Reached'}
         </Text>
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   advanceButtonText: {
-    color: '#0B0F19',
+    color: Colors.onPrimary,
     fontSize: 15,
     fontWeight: '800',
     letterSpacing: 0.2,

@@ -137,7 +137,9 @@ export const AICopilotScreen: React.FC = () => {
                     </Text>
                   ))}
                 </Text>
-                <Text style={styles.messageTime}>{formatTime(msg.ts)}</Text>
+                <Text style={[styles.messageTime, msg.role === 'user' ? styles.userMessageTime : styles.aiMessageTime]}>
+                  {formatTime(msg.ts)}
+                </Text>
               </View>
             </View>
             {msg.role === 'ai' && !!msg.actions?.length && (
@@ -208,7 +210,7 @@ export const AICopilotScreen: React.FC = () => {
           disabled={!input.trim() || loading}
           activeOpacity={0.8}
         >
-          <Ionicons name="send" size={18} color="#0B0F19" />
+          <Ionicons name="send" size={18} color={Colors.onPrimary} />
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -341,7 +343,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   userText: {
-    color: '#0B0F19',
+    color: Colors.onPrimary,
     fontWeight: '600',
   },
   aiText: {
@@ -375,9 +377,14 @@ const styles = StyleSheet.create({
   },
   messageTime: {
     fontSize: 10,
-    color: 'rgba(255,255,255,0.4)',
     marginTop: 4,
     alignSelf: 'flex-end',
+  },
+  aiMessageTime: {
+    color: Colors.textMuted,
+  },
+  userMessageTime: {
+    color: 'rgba(255,255,255,0.8)',
   },
   typingText: {
     color: Colors.textSecondary,

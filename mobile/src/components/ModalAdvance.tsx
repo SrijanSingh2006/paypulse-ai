@@ -186,10 +186,10 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
             activeOpacity={0.85}
           >
             {loading ? (
-              <ActivityIndicator color="#0B0F19" />
+              <ActivityIndicator color={Colors.onPrimary} />
             ) : (
               <>
-                <Ionicons name="arrow-forward-circle" size={20} color="#0B0F19" />
+                <Ionicons name="arrow-forward-circle" size={20} color={Colors.onPrimary} />
                 <Text style={styles.disburseText}>
                   Disburse ${numAmount > 0 ? numAmount.toFixed(2) : '0.00'} Now
                 </Text>
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   disburseText: {
-    color: '#0B0F19',
+    color: Colors.onPrimary,
     fontSize: 16,
     fontWeight: '800',
   },

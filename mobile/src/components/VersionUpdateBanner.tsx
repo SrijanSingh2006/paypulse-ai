@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   closeActionText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0B0F19',
+    color: Colors.onPrimary,
   },
 });
 
