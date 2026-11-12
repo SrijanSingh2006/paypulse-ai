@@ -80,3 +80,4 @@ We follow Semantic Versioning (`MAJOR.MINOR.PATCH`):
 - `MINOR` (e.g. `2.4.0`): New features (e.g. adding EdTech allowance tracking).
 - `PATCH` (e.g. `2.4.1`): Hotfixes, receipt compression tweaks, and bug fixes.
 - `versionCode` (Android) & `buildNumber` (iOS): Increment monotonically with every EAS build run (handled automatically in `eas.json`).
+

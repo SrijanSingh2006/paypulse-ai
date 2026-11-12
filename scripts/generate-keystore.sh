@@ -34,3 +34,4 @@ keytool -genkeypair -v \
   -keypass "PayPulseProdKey2026!"
 
 echo "✅ Release keystore created successfully at: $DEST_PATH"
+

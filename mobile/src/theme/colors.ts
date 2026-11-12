@@ -30,3 +30,4 @@ export const Colors = {
   hardware: '#EC4899',
   meals: '#F97316',
 };
+

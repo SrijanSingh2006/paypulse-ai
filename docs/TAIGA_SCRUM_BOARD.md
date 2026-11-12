@@ -74,3 +74,4 @@ xychart-beta
     y-axis "Story Points" 0 --> 25
     bar [13, 13, 8]
 ```
+

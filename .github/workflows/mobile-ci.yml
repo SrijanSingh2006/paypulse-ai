@@ -67,3 +67,4 @@ jobs:
         run: |
           cd mobile
           npx eas-cli@latest config:validate || echo "EAS config valid"
+

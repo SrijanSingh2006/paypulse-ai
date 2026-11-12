@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Automated Android Production Keystore Generator for Heftin PayPulse
 .DESCRIPTION
@@ -53,3 +53,4 @@ try {
 } catch {
     Write-Error "keytool not found on system PATH. Ensure JDK 17+ is installed."
 }
+

@@ -64,14 +64,16 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-// Start listening
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🚀 PayPulse API Server running at http://localhost:${PORT}`);
-  console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`💼 Tailored for Heftin AI Mobile Developer Portfolio`);
-  console.log(`====================================================`);
-});
+// Start listening when not in Vercel serverless
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(`🚀 PayPulse API Server running at http://localhost:${PORT}`);
+    console.log(`📡 Health Check: http://localhost:${PORT}/api/health`);
+    console.log(`💼 Tailored for Heftin AI Mobile Developer Portfolio`);
+    console.log(`====================================================`);
+  });
+}
 
 export default app;
 

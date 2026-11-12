@@ -112,3 +112,4 @@ Both frameworks are exceptional for cross-platform development:
 - **React Native** was chosen as the primary implementation for PayPulse AI due to its direct OEM styling, unmatched ecosystem of web-to-mobile shared TypeScript definitions with our Express backend, and TurboModules JSI performance.
 - **Flutter** is ideal for heavily customized 2D graphics or high-frequency charting dashboards where canvas-level rendering control is paramount.
 - Having hands-on proficiency in both **React Native / TypeScript** and **Flutter / Dart** empowers engineers to select the optimal tool for each Heftin AI product vertical.
+

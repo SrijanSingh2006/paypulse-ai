@@ -98,3 +98,4 @@ export interface ReleaseInfo {
   storeUrl: string;
   environment: string;
 }
+

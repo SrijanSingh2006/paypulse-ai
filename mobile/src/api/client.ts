@@ -3,7 +3,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import { User, EwaSummary, ExpenseClaim, AppNotification, Payslip } from '../types';
 
-// In Android Emulator localhost is 10.0.2.2; on iOS / physical device on same LAN it's localhost or machine IP.
+// Detect if running on an external web host (e.g. Vercel HTTPS) where calling http://localhost is blocked as Mixed Content
+export const isWebProduction =
+  Platform.OS === 'web' &&
+  typeof window !== 'undefined' &&
+  window.location.hostname !== 'localhost' &&
+  window.location.hostname !== '127.0.0.1';
+
 export const BASE_API_URL =
   Platform.OS === 'android'
     ? 'http://10.0.2.2:4000/api'
