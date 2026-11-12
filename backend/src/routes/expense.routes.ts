@@ -60,7 +60,7 @@ router.post('/', authenticateToken, (req: AuthRequest, res) => {
     currency: 'USD',
     merchant: merchant ? merchant.trim() : 'Company Vendor',
     date: date || new Date().toISOString().split('T')[0],
-    receiptUrl: receiptUrl || 'https://images.unsplash.com/photo-1554415707-9e4901f46487?w=400&auto=format&fit=crop&q=80',
+    receiptUrl: receiptUrl || undefined,
     status: 'PENDING',
     submittedAt: new Date().toISOString(),
   };
@@ -101,6 +101,10 @@ router.patch('/:id/review', authenticateToken, (req: AuthRequest, res) => {
   const claim = database.expenseClaims.find((c) => c.id === id);
   if (!claim) {
     return res.status(404).json({ success: false, message: 'Expense claim not found.' });
+  }
+
+  if (claim.status !== 'PENDING') {
+    return res.status(409).json({ success: false, message: 'Only pending claims can be reviewed.' });
   }
 
   if (decision === 'APPROVE') {

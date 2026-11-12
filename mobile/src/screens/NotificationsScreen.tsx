@@ -12,8 +12,10 @@ import { Colors } from '../theme/colors';
 import { Api } from '../api/endpoints';
 import { useApp } from '../context/AppContext';
 import { AppNotification } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 export const NotificationsScreen: React.FC = () => {
+  const { user } = useAuth();
   const { refreshKey, triggerRefresh } = useApp();
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -31,7 +33,7 @@ export const NotificationsScreen: React.FC = () => {
 
   useEffect(() => {
     loadNotifications();
-  }, [refreshKey]);
+  }, [refreshKey, user]);
 
   const onRefresh = () => {
     setRefreshing(true);

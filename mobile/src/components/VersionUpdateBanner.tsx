@@ -25,7 +25,7 @@ export const VersionUpdateBanner: React.FC = () => {
         <View style={styles.left}>
           <View style={styles.dot} />
           <Text style={styles.bannerText}>
-            Build v{release.latestVersion} (104) Live • Play Store & iOS Ready
+            Portfolio demo · v{release.latestVersion} ({release.buildNumber})
           </Text>
         </View>
         <View style={styles.right}>
@@ -39,8 +39,8 @@ export const VersionUpdateBanner: React.FC = () => {
           <View style={styles.dialog}>
             <View style={styles.dialogHeader}>
               <View>
-                <Text style={styles.dialogTitle}>Release v{release.latestVersion}</Text>
-                <Text style={styles.dialogDate}>Heftin Mobile Release Channel (Production)</Text>
+                <Text style={styles.dialogTitle}>Showcase build v{release.latestVersion}</Text>
+                <Text style={styles.dialogDate}>Interactive PayPulse portfolio preview</Text>
               </View>
               <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeBtn}>
                 <Ionicons name="close" size={18} color={Colors.textSecondary} />
@@ -58,12 +58,12 @@ export const VersionUpdateBanner: React.FC = () => {
 
             <View style={styles.storePills}>
               <View style={styles.storePill}>
-                <Ionicons name="logo-google-playstore" size={14} color={Colors.textSecondary} />
-                <Text style={styles.storePillText}>Google Play: AAB Signed</Text>
+                <Ionicons name="globe-outline" size={14} color={Colors.textSecondary} />
+                <Text style={styles.storePillText}>React Native Web</Text>
               </View>
               <View style={styles.storePill}>
-                <Ionicons name="logo-apple" size={14} color={Colors.textSecondary} />
-                <Text style={styles.storePillText}>App Store: TestFlight</Text>
+                <Ionicons name="flask-outline" size={14} color={Colors.textSecondary} />
+                <Text style={styles.storePillText}>Actions are simulated</Text>
               </View>
             </View>
 

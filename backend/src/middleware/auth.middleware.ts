@@ -2,7 +2,13 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { database, User } from '../data/db';
 
-export const JWT_SECRET = process.env.JWT_SECRET || 'heftin_ai_secret_super_secure_key_2026';
+const configuredJwtSecret = process.env.JWT_SECRET;
+
+if ((process.env.VERCEL || process.env.NODE_ENV === 'production') && !configuredJwtSecret) {
+  throw new Error('JWT_SECRET must be configured in production.');
+}
+
+export const JWT_SECRET = configuredJwtSecret || 'paypulse-local-demo-jwt-secret';
 
 export interface AuthRequest extends Request {
   user?: User;

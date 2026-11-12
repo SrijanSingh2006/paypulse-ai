@@ -1,4 +1,6 @@
 node_modules/
+.vercel/
+.env*
 .expo/
 dist/
 build/
@@ -8,3 +10,6 @@ build/
 google-services-key.json
 
 node_modules
+
+.vercel
+.env*

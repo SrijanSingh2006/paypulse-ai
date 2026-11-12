@@ -15,6 +15,7 @@ import { ExpensesScreen } from '../screens/ExpensesScreen';
 import { NotificationsScreen } from '../screens/NotificationsScreen';
 import { ProfileSettingsScreen } from '../screens/ProfileSettingsScreen';
 import { LoginScreen } from '../screens/LoginScreen';
+import { AICopilotScreen } from '../screens/AICopilotScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -59,6 +60,16 @@ function MainTabNavigator() {
           tabBarLabel: 'Expenses',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="receipt-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Copilot"
+        component={AICopilotScreen}
+        options={{
+          tabBarLabel: 'AI',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="sparkles-outline" size={size} color={color} />
           ),
         }}
       />
@@ -121,6 +132,9 @@ const styles = StyleSheet.create({
     height: 60,
     paddingBottom: 6,
     paddingTop: 6,
+    maxWidth: 1100,
+    alignSelf: 'center',
+    width: '100%',
   },
   tabBarLabel: {
     fontSize: 10,

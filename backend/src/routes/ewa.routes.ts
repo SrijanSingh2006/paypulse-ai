@@ -100,8 +100,8 @@ router.post('/request-advance', authenticateToken, (req: AuthRequest, res) => {
   const notif: AppNotification = {
     id: `notif_${Date.now()}`,
     userId,
-    title: 'Salary Advance Disbursed! ⚡',
-    message: `$${numAmount.toFixed(2)} was successfully disbursed to your ${user.bankAccount.bankName} account (${user.bankAccount.accountMasked}).`,
+    title: 'Demo wage advance recorded',
+    message: `A simulated $${numAmount.toFixed(2)} advance was added to the demo ledger. No funds moved.`,
     type: 'EWA_ADVANCE',
     read: false,
     timestamp: new Date().toISOString(),
@@ -110,7 +110,7 @@ router.post('/request-advance', authenticateToken, (req: AuthRequest, res) => {
 
   return res.status(201).json({
     success: true,
-    message: `Earned wage advance of $${numAmount.toFixed(2)} disbursed instantly.`,
+    message: `Demo advance of $${numAmount.toFixed(2)} recorded. No funds moved.`,
     transaction: newTx,
     updatedSummary: computeUserWageSummary(userId),
   });

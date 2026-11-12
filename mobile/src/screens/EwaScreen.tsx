@@ -14,9 +14,11 @@ import { TransactionItem } from '../components/TransactionItem';
 import { ModalAdvance } from '../components/ModalAdvance';
 import { Api } from '../api/endpoints';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import { EwaSummary } from '../types';
 
 export const EwaScreen: React.FC = () => {
+  const { user } = useAuth();
   const { refreshKey, triggerRefresh, isAdvanceModalOpen, setIsAdvanceModalOpen } = useApp();
   const [summary, setSummary] = useState<EwaSummary | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -34,7 +36,7 @@ export const EwaScreen: React.FC = () => {
 
   useEffect(() => {
     loadEwa();
-  }, [refreshKey]);
+  }, [refreshKey, user]);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -52,7 +54,7 @@ export const EwaScreen: React.FC = () => {
       >
         <Text style={styles.headerTitle}>Earned Wage Access (EWA)</Text>
         <Text style={styles.headerSubtitle}>
-          Access wages you've already worked for before month-end payday with zero predatory interest.
+          Explore an earned wage workflow. Advance actions update a demo ledger; no real payments move.
         </Text>
 
         <WageCard

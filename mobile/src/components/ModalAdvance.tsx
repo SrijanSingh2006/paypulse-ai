@@ -28,7 +28,7 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
   summary,
   onSuccess,
 }) => {
-  const maxAvailable = summary?.availableToWithdraw || 790;
+  const maxAvailable = summary?.availableToWithdraw ?? 790;
   const [amount, setAmount] = useState<string>('200');
   const [transferType, setTransferType] = useState<'INSTANT_ACH' | 'SAME_DAY_PAYPULSE'>('INSTANT_ACH');
   const [note, setNote] = useState<string>('');
@@ -58,15 +58,13 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
       const res = await Api.requestAdvance(numAmount, transferType, note);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       Alert.alert(
-        'Disbursement Initiated! ⚡',
-        `$${numAmount.toFixed(2)} is being deposited to your account ending in ${
-          summary?.bankAccount.accountMasked || '•••• 4829'
-        }.`
+        'Demo advance recorded ⚡',
+        `A simulated $${numAmount.toFixed(2)} advance was added to the demo ledger. No funds were moved.`
       );
       onSuccess(res.updatedSummary);
       onClose();
     } catch (e: any) {
-      Alert.alert('Error', e.response?.data?.message || 'Could not process advance.');
+      Alert.alert('Error', e.response?.data?.message || e.message || 'Could not process advance.');
     } finally {
       setLoading(false);
     }
@@ -79,7 +77,7 @@ export const ModalAdvance: React.FC<ModalAdvanceProps> = ({
           {/* Header */}
           <View style={styles.header}>
             <View>
-              <Text style={styles.title}>Request Wage Advance</Text>
+              <Text style={styles.title}>Simulate Wage Advance</Text>
               <Text style={styles.subtitle}>
                 Available to withdraw: <Text style={styles.highlight}>${maxAvailable.toFixed(2)}</Text>
               </Text>

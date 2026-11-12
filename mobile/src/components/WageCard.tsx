@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { EwaSummary } from '../types';
@@ -17,38 +17,93 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
   const currentDay = summary ? summary.currentDayOfMonth : 12;
   const daysInMonth = summary ? summary.daysInMonth : 30;
 
-  // Accrual progress percentage (e.g. 12/30 = 40%)
   const monthProgress = Math.min(100, Math.round((currentDay / daysInMonth) * 100));
+  const availablePct = Math.min(100, Math.round((available / monthly) * 100));
+
+  const animWidth = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animWidth, {
+      toValue: monthProgress,
+      duration: 900,
+      useNativeDriver: false,
+    }).start();
+  }, [monthProgress]);
 
   return (
     <View style={styles.cardContainer}>
+      {/* Glow top border accent */}
+      <View style={styles.glowBorder} />
+
       <View style={styles.topRow}>
         <View style={styles.pulseBadge}>
           <View style={styles.pulseDot} />
           <Text style={styles.pulseText}>EARNED WAGE PULSE</Text>
         </View>
-        <Text style={styles.dayCounter}>Day {currentDay} of {daysInMonth}</Text>
+        <View style={styles.dayPill}>
+          <Ionicons name="calendar-outline" size={11} color={Colors.textMuted} />
+          <Text style={styles.dayCounter}>Day {currentDay}/{daysInMonth}</Text>
+        </View>
       </View>
 
       <View style={styles.balanceSection}>
-        <Text style={styles.availableLabel}>Available to Disburse Today</Text>
+        <Text style={styles.availableLabel}>Available in Demo Ledger</Text>
         <View style={styles.amountRow}>
           <Text style={styles.currencySymbol}>$</Text>
-          <Text style={styles.amountText}>{available.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</Text>
+          <Text style={styles.amountText}>
+            {available.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </Text>
+          <View style={styles.changePill}>
+            <Ionicons name="trending-up" size={11} color={Colors.primary} />
+            <Text style={styles.changeText}>{availablePct}% liquid</Text>
+          </View>
         </View>
         <Text style={styles.subtext}>
-          Accrued so far: <Text style={styles.boldText}>${accrued.toFixed(2)}</Text> of ${monthly.toFixed(2)} gross
+          Accrued so far:{' '}
+          <Text style={styles.boldText}>${accrued.toFixed(2)}</Text>{' '}
+          of ${monthly.toFixed(2)} gross
         </Text>
       </View>
 
-      {/* Accrual Progress Bar */}
+      {/* Animated Accrual Progress */}
       <View style={styles.progressBarWrapper}>
-        <View style={styles.progressBarBackground}>
-          <View style={[styles.progressBarFill, { width: `${monthProgress}%` }]} />
+        <View style={styles.progressLabelsTop}>
+          <Text style={styles.progressLabelLeft}>Payroll accrual progress</Text>
+          <Text style={styles.progressLabelRight}>{monthProgress}%</Text>
         </View>
-        <View style={styles.progressLabels}>
-          <Text style={styles.progressLabelText}>Payroll Month: {monthProgress}% elapsed</Text>
-          <Text style={styles.progressLabelText}>50% Liquidity Cap</Text>
+        <View style={styles.progressBarBackground}>
+          <Animated.View
+            style={[
+              styles.progressBarFill,
+              {
+                width: animWidth.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: ['0%', '100%'],
+                }),
+              },
+            ]}
+          />
+          {/* 50% cap marker */}
+          <View style={styles.capMarker} />
+        </View>
+        <Text style={styles.capText}>50% liquidity cap</Text>
+      </View>
+
+      {/* Stats Row */}
+      <View style={styles.statsRow}>
+        <View style={styles.statItem}>
+          <Text style={styles.statValue}>${summary?.dailyEarnings?.toFixed(0) || '240'}</Text>
+          <Text style={styles.statLabel}>Daily Rate</Text>
+        </View>
+        <View style={styles.statDivider} />
+        <View style={styles.statItem}>
+          <Text style={styles.statValue}>${summary?.withdrawnToDate?.toFixed(0) || '650'}</Text>
+          <Text style={[styles.statLabel, { color: Colors.danger }]}>Disbursed</Text>
+        </View>
+        <View style={styles.statDivider} />
+        <View style={styles.statItem}>
+          <Text style={styles.statValue}>${summary?.maxEligibleAccrual?.toFixed(0) || '1440'}</Text>
+          <Text style={styles.statLabel}>Eligible Cap</Text>
         </View>
       </View>
 
@@ -61,14 +116,14 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
       >
         <Ionicons name="flash" size={18} color="#0B0F19" />
         <Text style={styles.advanceButtonText}>
-          {available > 0 ? 'Request Instant Advance' : 'Advance Limit Reached'}
+          {available > 0 ? 'Simulate Wage Advance' : 'Advance Limit Reached'}
         </Text>
       </TouchableOpacity>
 
       <View style={styles.footerNote}>
-        <Ionicons name="shield-checkmark-outline" size={13} color={Colors.textMuted} />
+        <Ionicons name="shield-checkmark-outline" size={12} color={Colors.textMuted} />
         <Text style={styles.footerNoteText}>
-          0% Interest • No Credit Check • Deposited to {summary?.bankAccount.accountMasked || '•••• 4829'}
+          Demo ledger · no real funds move · {summary?.bankAccount.accountMasked || '•••• 4829'}
         </Text>
       </View>
     </View>
@@ -78,35 +133,47 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
 const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: Colors.card,
-    borderRadius: 18,
+    borderRadius: 20,
     padding: 20,
     borderWidth: 1,
     borderColor: Colors.border,
     shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 14,
+    elevation: 5,
     marginVertical: 10,
+    overflow: 'hidden',
+  },
+  glowBorder: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 2,
+    backgroundColor: Colors.primary,
+    opacity: 0.7,
   },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
   },
   pulseBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
     paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingVertical: 5,
     borderRadius: 20,
     gap: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.2)',
   },
   pulseDot: {
-    width: 8,
-    height: 8,
+    width: 7,
+    height: 7,
     borderRadius: 4,
     backgroundColor: Colors.primary,
   },
@@ -116,78 +183,157 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 0.8,
   },
+  dayPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: Colors.cardSecondary,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
   dayCounter: {
     color: Colors.textSecondary,
-    fontSize: 12,
-    fontWeight: '500',
+    fontSize: 11,
+    fontWeight: '600',
   },
   balanceSection: {
-    marginVertical: 8,
+    marginBottom: 16,
   },
   availableLabel: {
-    color: Colors.textSecondary,
-    fontSize: 13,
+    color: Colors.textMuted,
+    fontSize: 12,
     fontWeight: '500',
+    letterSpacing: 0.3,
   },
   amountRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'flex-end',
     marginVertical: 4,
+    gap: 6,
   },
   currencySymbol: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     color: Colors.primary,
-    marginTop: 4,
-    marginRight: 2,
+    marginBottom: 4,
   },
   amountText: {
-    fontSize: 38,
+    fontSize: 42,
     fontWeight: '800',
     color: Colors.text,
-    letterSpacing: -0.5,
+    letterSpacing: -1,
+    lineHeight: 48,
+  },
+  changePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 6,
+    marginBottom: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.2)',
+  },
+  changeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: Colors.primary,
   },
   subtext: {
     color: Colors.textSecondary,
-    fontSize: 13,
+    fontSize: 12,
     marginTop: 2,
   },
   boldText: {
     color: Colors.text,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   progressBarWrapper: {
-    marginVertical: 14,
+    marginBottom: 16,
+  },
+  progressLabelsTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  progressLabelLeft: {
+    fontSize: 11,
+    color: Colors.textMuted,
+  },
+  progressLabelRight: {
+    fontSize: 11,
+    color: Colors.primaryLight,
+    fontWeight: '700',
   },
   progressBarBackground: {
-    height: 8,
+    height: 10,
     backgroundColor: Colors.cardSecondary,
-    borderRadius: 4,
+    borderRadius: 5,
     overflow: 'hidden',
+    position: 'relative',
   },
   progressBarFill: {
     height: '100%',
     backgroundColor: Colors.primary,
-    borderRadius: 4,
+    borderRadius: 5,
   },
-  progressLabels: {
+  capMarker: {
+    position: 'absolute',
+    left: '50%',
+    top: 0,
+    bottom: 0,
+    width: 2,
+    backgroundColor: Colors.warning,
+    opacity: 0.8,
+  },
+  capText: {
+    fontSize: 10,
+    color: Colors.warning,
+    marginTop: 4,
+    textAlign: 'right',
+  },
+  statsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 6,
+    backgroundColor: Colors.cardSecondary,
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
-  progressLabelText: {
-    fontSize: 11,
+  statItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statValue: {
+    fontSize: 15,
+    fontWeight: '800',
+    color: Colors.text,
+  },
+  statLabel: {
+    fontSize: 10,
     color: Colors.textMuted,
+    marginTop: 2,
+    fontWeight: '500',
+  },
+  statDivider: {
+    width: 1,
+    backgroundColor: Colors.border,
+    marginHorizontal: 8,
   },
   advanceButton: {
     backgroundColor: Colors.primary,
-    borderRadius: 12,
-    paddingVertical: 14,
+    borderRadius: 14,
+    paddingVertical: 15,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
-    marginTop: 6,
   },
   disabledButton: {
     backgroundColor: Colors.cardSecondary,
@@ -196,13 +342,14 @@ const styles = StyleSheet.create({
   advanceButtonText: {
     color: '#0B0F19',
     fontSize: 15,
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: 0.2,
   },
   footerNote: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    gap: 5,
     marginTop: 12,
   },
   footerNoteText: {
@@ -210,4 +357,3 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
 });
-

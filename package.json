@@ -1,12 +1,19 @@
 {
   "name": "paypulse-monorepo",
   "version": "2.4.0",
-  "description": "Enterprise HR & FinTech Mobile Platform for Heftin AI Portfolio",
+  "description": "Cross-platform employee benefits and earned wage access demo",
+  "homepage": "https://dist-three-kappa-22.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SrijanSingh2006/paypulse-ai.git"
+  },
   "scripts": {
     "start:backend": "cd backend && npm run dev",
     "start:mobile": "cd mobile && npm start",
     "dev": "concurrently -n \"BACKEND,MOBILE\" -c \"cyan,green\" \"cd backend && npm run dev\" \"cd mobile && npm start\"",
     "build:backend": "cd backend && npm run build",
+    "build:web": "cd mobile && npx expo export --platform web",
+    "start:web": "cd mobile && npx expo start --web --port 3000",
     "typecheck": "cd mobile && npx tsc --noEmit",
     "test": "cd backend && npm run build && cd ../mobile && npx tsc --noEmit"
   },

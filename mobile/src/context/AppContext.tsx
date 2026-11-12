@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Api } from '../api/endpoints';
 import { Payslip } from '../types';
+import { useAuth } from './AuthContext';
 
 interface AppContextType {
   refreshKey: number;
@@ -19,6 +20,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType>({} as AppContextType);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useAuth();
   const [refreshKey, setRefreshKey] = useState(0);
   const [unreadCount, setUnreadCount] = useState(2);
   const [selectedPayslip, setSelectedPayslip] = useState<Payslip | null>(null);
@@ -41,7 +43,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     refreshNotificationsCount();
-  }, [refreshKey]);
+  }, [refreshKey, user]);
 
   return (
     <AppContext.Provider

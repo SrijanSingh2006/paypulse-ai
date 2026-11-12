@@ -8,6 +8,7 @@ import {
   RefreshControl,
   Modal,
   Image,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
@@ -38,7 +39,7 @@ export const ExpensesScreen: React.FC = () => {
 
   const loadClaims = async () => {
     try {
-      const data = await Api.getExpenses(selectedCategory === 'ALL' ? undefined : selectedCategory);
+      const data = await Api.getExpenses(undefined, selectedCategory === 'ALL' ? undefined : selectedCategory);
       setClaims(data);
     } catch (e) {
       console.warn('Error loading expenses:', e);
@@ -57,13 +58,21 @@ export const ExpensesScreen: React.FC = () => {
   };
 
   const handleApprove = async (id: string) => {
-    await Api.reviewExpense(id, 'APPROVE');
-    triggerRefresh();
+    try {
+      await Api.reviewExpense(id, 'APPROVE');
+      triggerRefresh();
+    } catch (error: any) {
+      Alert.alert('Could not approve claim', error.response?.data?.message || error.message || 'Please try again.');
+    }
   };
 
   const handleReject = async (id: string) => {
-    await Api.reviewExpense(id, 'REJECT');
-    triggerRefresh();
+    try {
+      await Api.reviewExpense(id, 'REJECT');
+      triggerRefresh();
+    } catch (error: any) {
+      Alert.alert('Could not reject claim', error.response?.data?.message || error.message || 'Please try again.');
+    }
   };
 
   // EdTech Allowance Calculations
@@ -87,8 +96,8 @@ export const ExpensesScreen: React.FC = () => {
         </Text>
         <Text style={styles.headerSubtitle}>
           {isManager
-            ? 'Review and authorize team expense claims, conference travel, and learning stipends.'
-            : 'Submit and track corporate claims with instant receipt audit and policy compliance.'}
+            ? 'Review team claims in the demo workspace. Decisions update the local review ledger.'
+            : 'Submit and track reimbursement claims. This demo keeps changes in its workspace ledger.'}
         </Text>
 
         {/* Corporate EdTech Allowance Tracker */}

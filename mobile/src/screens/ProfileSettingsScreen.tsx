@@ -33,11 +33,8 @@ export const ProfileSettingsScreen: React.FC = () => {
 
   const handleShowStoreSigning = () => {
     Alert.alert(
-      'Google Play & App Store Signing Info',
-      '• Android Keystore: PayPulse_Release_Keystore.jks\n' +
-      '• SHA-256: 3B:9A:8F:72:E4:1D:C9:88:51:70:E2:FA:14:89:01:BC:6D:FE:33:91\n' +
-      '• iOS Team ID: 7H839JK2PA\n' +
-      '• Distribution Channel: EAS Internal / Play Console Track'
+      'EAS build configuration',
+      'Preview and production profiles are defined in mobile/eas.json. This portfolio demo does not include signing keys or published mobile store builds.'
     );
   };
 
@@ -85,14 +82,14 @@ export const ProfileSettingsScreen: React.FC = () => {
         </View>
 
         {/* Security & Biometrics */}
-        <Text style={styles.sectionHeader}>Security & Mobile Auth</Text>
+        <Text style={styles.sectionHeader}>Demo preferences</Text>
         <View style={styles.cardGroup}>
           <View style={styles.settingItem}>
             <View style={styles.settingLeft}>
               <Ionicons name="finger-print-outline" size={20} color={Colors.primary} />
               <View>
-                <Text style={styles.settingTitle}>Biometric Lock (Face ID / Fingerprint)</Text>
-                <Text style={styles.settingSubtitle}>Enforce biometrics for advance disbursements</Text>
+                <Text style={styles.settingTitle}>Quick unlock shortcut</Text>
+                <Text style={styles.settingSubtitle}>Demo preference only; no device biometric check runs</Text>
               </View>
             </View>
             <Switch
@@ -107,8 +104,8 @@ export const ProfileSettingsScreen: React.FC = () => {
             <View style={styles.settingLeft}>
               <Ionicons name="document-text-outline" size={20} color={Colors.warning} />
               <View>
-                <Text style={styles.settingTitle}>View Official Payslip Breakdown</Text>
-                <Text style={styles.settingSubtitle}>Tax, PF, Insurance & Net Pay</Text>
+                <Text style={styles.settingTitle}>View payslip breakdown</Text>
+                <Text style={styles.settingSubtitle}>Demo tax, retirement, insurance, and net pay</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={18} color={Colors.textMuted} />
@@ -116,14 +113,14 @@ export const ProfileSettingsScreen: React.FC = () => {
         </View>
 
         {/* Release & DevOps Diagnostics (For Heftin AI JD) */}
-        <Text style={styles.sectionHeader}>DevOps & App Store Engineering</Text>
+        <Text style={styles.sectionHeader}>Build configuration</Text>
         <View style={styles.cardGroup}>
           <TouchableOpacity style={styles.settingItem} onPress={handleShowStoreSigning}>
             <View style={styles.settingLeft}>
               <Ionicons name="key-outline" size={20} color={Colors.accentLight} />
               <View>
-                <Text style={styles.settingTitle}>App Signing & Store Certificates</Text>
-                <Text style={styles.settingSubtitle}>Google Play Keystore & Apple Provisioning</Text>
+                <Text style={styles.settingTitle}>EAS build profiles</Text>
+                <Text style={styles.settingSubtitle}>Preview and production settings</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={18} color={Colors.textMuted} />
@@ -142,12 +139,12 @@ export const ProfileSettingsScreen: React.FC = () => {
             <Text style={styles.infoValue}>React Native New Arch (Fabric + Turbo)</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Flutter Companion Spec</Text>
-            <Text style={styles.infoValue}>Dart / Impeller Benchmark Ready</Text>
+            <Text style={styles.infoLabel}>Architecture notes</Text>
+            <Text style={styles.infoValue}>React Native implementation + RFC</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Agile Project Board</Text>
-            <Text style={styles.infoValue}>Taiga Sprint #2 Completed</Text>
+            <Text style={styles.infoLabel}>Demo environment</Text>
+            <Text style={styles.infoValue}>Local state · no real money movement</Text>
           </View>
         </View>
 
@@ -158,7 +155,7 @@ export const ProfileSettingsScreen: React.FC = () => {
         </TouchableOpacity>
 
         <Text style={styles.footerVersion}>
-          Heftin PayPulse AI • Engineered for Heftin AI Mobile Developer Portfolio
+          PayPulse AI · interactive portfolio demo
         </Text>
       </ScrollView>
 

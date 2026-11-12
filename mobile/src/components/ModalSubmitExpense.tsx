@@ -39,9 +39,7 @@ export const ModalSubmitExpense: React.FC<ModalSubmitExpenseProps> = ({
   const [category, setCategory] = useState('EDUCATION_EDTECH');
   const [amount, setAmount] = useState('');
   const [merchant, setMerchant] = useState('');
-  const [receiptImage, setReceiptImage] = useState<string | null>(
-    'https://images.unsplash.com/photo-1554415707-9e4901f46487?w=400&auto=format&fit=crop&q=80'
-  );
+  const [receiptImage, setReceiptImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handlePickImage = async () => {
@@ -49,11 +47,14 @@ export const ModalSubmitExpense: React.FC<ModalSubmitExpenseProps> = ({
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        quality: 0.7,
+        quality: 0.6,
+        base64: true,
+        exif: false,
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        setReceiptImage(result.assets[0].uri);
+        const asset = result.assets[0];
+        setReceiptImage(asset.base64 ? `data:${asset.mimeType || 'image/jpeg'};base64,${asset.base64}` : asset.uri);
       }
     } catch (e) {
       console.log('Error opening image picker:', e);
@@ -81,7 +82,7 @@ export const ModalSubmitExpense: React.FC<ModalSubmitExpenseProps> = ({
         receiptUrl: receiptImage || undefined,
       });
 
-      Alert.alert('Success! 🎉', 'Expense claim submitted for HR approval.');
+      Alert.alert('Claim saved', 'Your demo claim is ready for HR review. No reimbursement has been sent.');
       onSuccess(claim);
       onClose();
       // Reset form
@@ -180,7 +181,7 @@ export const ModalSubmitExpense: React.FC<ModalSubmitExpenseProps> = ({
             </View>
 
             {/* Receipt Attachment */}
-            <Text style={styles.label}>Proof of Purchase / Tax Receipt</Text>
+            <Text style={styles.label}>Receipt attachment · Optional</Text>
             <TouchableOpacity style={styles.uploadArea} onPress={handlePickImage} activeOpacity={0.8}>
               {receiptImage ? (
                 <View style={styles.previewContainer}>
@@ -194,7 +195,7 @@ export const ModalSubmitExpense: React.FC<ModalSubmitExpenseProps> = ({
                 <View style={styles.uploadPlaceholder}>
                   <Ionicons name="cloud-upload-outline" size={28} color={Colors.primary} />
                   <Text style={styles.uploadText}>Attach Invoice / Receipt Photo</Text>
-                  <Text style={styles.uploadSubtext}>Supports PNG, JPG, PDF receipt scans</Text>
+                  <Text style={styles.uploadSubtext}>Attach a JPG or PNG receipt scan</Text>
                 </View>
               )}
             </TouchableOpacity>

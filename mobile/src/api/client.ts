@@ -167,8 +167,8 @@ export const fallbackStore = {
     {
       id: 'notif_003',
       userId: 'usr_heftin_001',
-      title: 'Heftin PayPulse 2.4.0 Live',
-      message: 'New build released with biometric FaceID security and faster receipt upload.',
+      title: 'PayPulse demo workspace',
+      message: 'Advance and reimbursement actions update the demo ledger only. No real money moves.',
       type: 'SYSTEM_ALERT' as const,
       read: false,
       timestamp: new Date(Date.now() - 12 * 3600000).toISOString(),
@@ -191,4 +191,116 @@ export const fallbackStore = {
     },
   ] as Payslip[],
 };
+
+const demoUsers: Record<'EMPLOYEE' | 'HR_MANAGER', User> = {
+  EMPLOYEE: fallbackStore.user,
+  HR_MANAGER: {
+    id: 'usr_heftin_002',
+    name: 'Sarah Chen',
+    email: 'manager@heftin.ai',
+    role: 'HR_MANAGER',
+    designation: 'VP of People & Culture',
+    department: 'Human Resources & Operations',
+    monthlySalary: 9500,
+    availableWageLimitRatio: 0.5,
+    bankAccount: {
+      bankName: 'JPMorgan Chase',
+      accountMasked: '•••• 9012',
+      routingNumber: '021000021',
+    },
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80',
+  },
+};
+
+const daysInCurrentMonth = 30;
+const currentDayOfMonth = Math.min(new Date().getDate(), 28);
+
+const createDemoSummary = (user: User): EwaSummary => {
+  const dailyEarnings = user.monthlySalary / daysInCurrentMonth;
+  const grossAccruedToDate = dailyEarnings * currentDayOfMonth;
+  const maxEligibleAccrual = grossAccruedToDate * user.availableWageLimitRatio;
+  const isEmployee = user.role === 'EMPLOYEE';
+  const transactions = isEmployee ? fallbackStore.summary.transactions : [];
+  const withdrawnToDate = isEmployee ? 650 : 0;
+
+  return {
+    userId: user.id,
+    monthlySalary: user.monthlySalary,
+    dailyEarnings,
+    currentDayOfMonth,
+    daysInMonth: daysInCurrentMonth,
+    grossAccruedToDate,
+    maxEligibleAccrual,
+    withdrawnToDate,
+    availableToWithdraw: Math.max(0, maxEligibleAccrual - withdrawnToDate),
+    limitRatioPercentage: user.availableWageLimitRatio * 100,
+    bankAccount: user.bankAccount,
+    transactions,
+  };
+};
+
+const roleSummaries: Record<'EMPLOYEE' | 'HR_MANAGER', EwaSummary> = {
+  EMPLOYEE: createDemoSummary(demoUsers.EMPLOYEE),
+  HR_MANAGER: createDemoSummary(demoUsers.HR_MANAGER),
+};
+
+let activeDemoRole: 'EMPLOYEE' | 'HR_MANAGER' = 'EMPLOYEE';
+let demoStoreReady = false;
+let demoStoreHydration: Promise<void> | null = null;
+
+const DEMO_STORE_KEY = '@paypulse_demo_state_v1';
+
+export async function hydrateDemoStore(): Promise<void> {
+  if (!isWebProduction || demoStoreReady) return;
+  if (!demoStoreHydration) {
+    demoStoreHydration = (async () => {
+      try {
+        const raw = await AsyncStorage.getItem(DEMO_STORE_KEY);
+        if (raw) {
+          const saved = JSON.parse(raw);
+          if (saved.claims) fallbackStore.claims = saved.claims;
+          if (saved.notifications) fallbackStore.notifications = saved.notifications;
+          if (saved.payslips) fallbackStore.payslips = saved.payslips;
+          if (saved.roleSummaries?.EMPLOYEE) roleSummaries.EMPLOYEE = saved.roleSummaries.EMPLOYEE;
+          if (saved.roleSummaries?.HR_MANAGER) roleSummaries.HR_MANAGER = saved.roleSummaries.HR_MANAGER;
+          if (saved.activeDemoRole === 'HR_MANAGER') activeDemoRole = 'HR_MANAGER';
+        }
+      } catch {
+        // A malformed or unavailable browser cache should not prevent the demo from opening.
+      }
+      fallbackStore.user = demoUsers[activeDemoRole];
+      fallbackStore.summary = roleSummaries[activeDemoRole];
+      demoStoreReady = true;
+    })();
+  }
+  await demoStoreHydration;
+}
+
+export async function persistDemoStore(): Promise<void> {
+  if (!isWebProduction) return;
+  await hydrateDemoStore();
+  try {
+    await AsyncStorage.setItem(
+      DEMO_STORE_KEY,
+      JSON.stringify({
+        activeDemoRole,
+        roleSummaries,
+        claims: fallbackStore.claims,
+        notifications: fallbackStore.notifications,
+        payslips: fallbackStore.payslips,
+      })
+    );
+  } catch {
+    // Keep the current session usable if browser storage is disabled or full.
+  }
+}
+
+export async function setDemoRole(role: 'EMPLOYEE' | 'HR_MANAGER'): Promise<User> {
+  await hydrateDemoStore();
+  activeDemoRole = role;
+  fallbackStore.user = demoUsers[role];
+  fallbackStore.summary = roleSummaries[role];
+  await persistDemoStore();
+  return fallbackStore.user;
+}
 

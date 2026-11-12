@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { User } from '../types';
 import { Api } from '../api/endpoints';
+import { setDemoRole } from '../api/client';
 
 interface AuthContextType {
   user: User | null;
@@ -37,8 +38,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (storedToken && storedUser) {
+        const parsedUser: User = JSON.parse(storedUser);
+        await setDemoRole(parsedUser.role === 'HR_MANAGER' ? 'HR_MANAGER' : 'EMPLOYEE');
         setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+        setUser(parsedUser);
       } else {
         // Automatically pre-load employee session for frictionless first-run experience
         const res = await Api.login('employee@heftin.ai', 'password123');

@@ -7,6 +7,7 @@ import expenseRoutes from './routes/expense.routes';
 import notificationRoutes from './routes/notification.routes';
 import payslipRoutes from './routes/payslip.routes';
 import releaseRoutes from './routes/release.routes';
+import aiRoutes from './routes/ai.routes';
 
 dotenv.config();
 
@@ -39,9 +40,10 @@ app.get('/api/health', (req, res) => {
       'JWT Authentication & RBAC',
       'Earned Wage Access (EWA / FinTech)',
       'HR Expense & EdTech Reimbursements',
-      'Push Notification Dispatcher',
+      'In-App Notification Center',
       'Payslip & Payroll Ledger',
       'Store Release & Version Engine',
+      'Rule-Based Benefits Copilot',
     ],
   });
 });
@@ -53,6 +55,7 @@ app.use('/api/expenses', expenseRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/payslips', payslipRoutes);
 app.use('/api/release', releaseRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
