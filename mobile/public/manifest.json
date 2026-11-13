@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "PayPulse AI",
+  "short_name": "PayPulse",
+  "description": "Employee pay, earned wage access, and expense benefits in one workspace.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#18364B",
+  "background_color": "#F4F1E9",
+  "icons": [
+    {
+      "src": "/paypulse-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

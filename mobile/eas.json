@@ -24,22 +24,6 @@
       "channel": "production",
       "android": {
         "buildType": "app-bundle"
-      },
-      "ios": {
-        "enterpriseProvisioning": "adhoc"
-      }
-    }
-  },
-  "submit": {
-    "production": {
-      "android": {
-        "serviceAccountKeyPath": "./google-services-key.json",
-        "track": "internal"
-      },
-      "ios": {
-        "appleId": "developer@heftin.ai",
-        "ascAppId": "1689234812",
-        "appleTeamId": "7H839JK2PA"
       }
     }
   }

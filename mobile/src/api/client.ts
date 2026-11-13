@@ -1,6 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import Constants from 'expo-constants';
 import { User, EwaSummary, ExpenseClaim, AppNotification, Payslip } from '../types';
 
 // Detect if running on an external web host (e.g. Vercel HTTPS) where calling http://localhost is blocked as Mixed Content
@@ -10,10 +11,12 @@ export const isWebProduction =
   window.location.hostname !== 'localhost' &&
   window.location.hostname !== '127.0.0.1';
 
-export const BASE_API_URL =
+const configuredApiUrl = process.env.EXPO_PUBLIC_API_URL || Constants.expoConfig?.extra?.apiUrl;
+export const BASE_API_URL = configuredApiUrl || (
   Platform.OS === 'android'
     ? 'http://10.0.2.2:4000/api'
-    : 'http://localhost:4000/api';
+    : 'http://localhost:4000/api'
+);
 
 export const apiClient = axios.create({
   baseURL: BASE_API_URL,

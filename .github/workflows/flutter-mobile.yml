@@ -1,0 +1,75 @@
+name: Flutter mobile build
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'flutter_app/**'
+      - '.github/workflows/flutter-mobile.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'flutter_app/**'
+      - '.github/workflows/flutter-mobile.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-demo-apk:
+    name: Analyze Flutter and build installable Android demo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate Android platform scaffold
+        run: |
+          mkdir -p .ci
+          flutter create --no-pub --platforms=android --org ai.heftin --project-name paypulseflutter .ci/flutter-shell
+          cp -R .ci/flutter-shell/android flutter_app/android
+      - name: Resolve packages, format, and analyze Dart
+        working-directory: flutter_app
+        run: |
+          flutter pub get
+          dart format lib
+          flutter analyze
+      - name: Build debug APK for device demonstration
+        working-directory: flutter_app
+        run: flutter build apk --debug --dart-define=API_BASE_URL=https://paypulse-api-three.vercel.app/api
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paypulse-flutter-android-demo-apk
+          path: flutter_app/build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
+
+  ios-simulator-build:
+    name: Compile unsigned iOS simulator app
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate iOS platform scaffold
+        run: |
+          mkdir -p .ci
+          flutter create --no-pub --platforms=ios --org ai.heftin --project-name paypulseflutter .ci/flutter-shell
+          cp -R .ci/flutter-shell/ios flutter_app/ios
+      - name: Resolve packages and compile simulator app
+        working-directory: flutter_app
+        run: |
+          flutter pub get
+          /usr/libexec/PlistBuddy -c 'Add :NSPhotoLibraryUsageDescription string PayPulse lets you attach a receipt image to a demo expense claim.' ios/Runner/Info.plist
+          flutter build ios --simulator --no-codesign --dart-define=API_BASE_URL=https://paypulse-api-three.vercel.app/api
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paypulse-flutter-ios-simulator-app
+          path: flutter_app/build/ios/iphonesimulator/Runner.app
+          if-no-files-found: error
+          retention-days: 14

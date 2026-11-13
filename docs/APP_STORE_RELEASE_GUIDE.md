@@ -1,83 +1,34 @@
-# Mobile App Release & Store Publishing Guide
+# Mobile store release checklist
 
-**Application:** PayPulse AI (HR Tech & FinTech)  
-**Package / Bundle ID:** `ai.heftin.paypulse`  
-**Target Stores:** Google Play Console & Apple App Store Connect  
-**Build Toolchain:** Expo Application Services (EAS Build), Fastlane, Android Keystore  
+PayPulse is a portfolio demo with two mobile clients: Expo / React Native and Flutter. The backend currently uses seeded in-memory demo data, accepts demo credentials, and simulates wage advances and reimbursements. No production store release has been made. Complete the items below before submitting either client to a public store.
 
----
+## Google Play
 
-## 1. Google Play Store Release Process
+1. Create or select a Play Console developer account and register the Android application ID `ai.heftin.paypulse` (the React Native app currently uses this ID). Choose a unique application ID first if the account already has it registered.
+2. Replace demo authentication and in-memory storage with production services. Review the API, receipt handling, network security, account deletion, and support contact details.
+3. Prepare the Play listing: app name and description, screenshots, icon, feature graphic, privacy policy URL, content rating, target audience, ads declaration, and Data safety answers based on the final app and its vendors.
+4. Build a signed Android App Bundle (`.aab`) for release. Create an upload key locally, protect its password, and store signing material in a password manager or CI secrets. Never commit the keystore or passwords. Play App Signing and upload-key requirements are described in the [Android app signing guide](https://developer.android.com/studio/publish/app-signing).
+5. Upload to an internal testing track, add testers, review pre-launch reports, then use the closed/open testing or production track available to the account. Google Play may require specific testing periods for new personal developer accounts. Follow the current Console prompts and [release instructions](https://support.google.com/googleplay/android-developer/answer/9859348?hl=en).
 
-### 1.1 App Signing & Keystore Setup
-Google Play requires apps to be packaged as **Android App Bundles (`.aab`)** and signed using an upload key.
-1. Generate the upload keystore using our automated script:
-   ```bash
-   # Windows PowerShell:
-   powershell -ExecutionPolicy Bypass -File scripts/generate-keystore.ps1
-   # macOS / Linux:
-   chmod +x scripts/generate-keystore.sh && ./scripts/generate-keystore.sh
-   ```
-2. Configure `gradle.properties` or EAS credentials:
-   ```properties
-   PAYPULSE_UPLOAD_STORE_FILE=paypulse-release.jks
-   PAYPULSE_UPLOAD_KEY_ALIAS=paypulse-release-key
-   PAYPULSE_UPLOAD_STORE_PASSWORD=PayPulseProdKey2026!
-   PAYPULSE_UPLOAD_KEY_PASSWORD=PayPulseProdKey2026!
-   ```
+For a local upload-key file, run `keytool -genkeypair -v -storetype PKCS12 -keystore paypulse-upload.jks -alias paypulse-upload -keyalg RSA -keysize 2048 -validity 10000`. Keytool prompts for passwords; choose and securely store your own values. Do not reuse a demo password.
 
-### 1.2 Google Play Console Requirements & Data Safety Checklist
-Google requires a comprehensive Data Safety declaration before publishing:
-- **Personal Info**: Name and email collected for employee HR account authentication.
-- **Financial Info**: User bank account masked string and earned wage transfer history for Earned Wage Access (EWA).
-- **Photos & Docs**: Receipt invoices uploaded for corporate expense claims.
-- **Security Practices**:
-  - Data encrypted in transit using TLS 1.3.
-  - User can request account/expense data deletion through HR administrators.
+## Apple App Store
 
-### 1.3 Release Tracks & Staged Rollout
-1. **Internal Testing**: Fast track for Heftin AI internal QA team (immediate access via tester email list).
-2. **Closed Alpha / Beta**: Targeted test group before store-wide release.
-3. **Production Staged Rollout**:
-   - Day 1: 10% of users
-   - Day 2: 25% of users (monitor crash rate in Google Vitals)
-   - Day 4: 50%
-   - Day 7: 100% full release
+1. Enroll in the Apple Developer Program and register an App ID. The React Native app's current bundle ID is `ai.heftin.paypulse`; Flutter's generated iOS project must use the same ID only if the two clients are alternatives for one listing. Use a different ID for a separate listing.
+2. Configure signing in Xcode with the account's Team, distribution certificate, and provisioning profile. Apple signing requires a Mac with Xcode and valid developer credentials.
+3. Create the App Store Connect app record. Complete its metadata, age rating, screenshots, privacy policy, export-compliance answers, and App Privacy details based on actual runtime behavior and all integrated services.
+4. Archive and upload a signed build using Xcode or Transporter, select the build in App Store Connect, complete review information, and submit it for review. See Apple's [upload guide](https://developer.apple.com/help/app-store-connect/manage-builds/upload-builds/), [submission workflow](https://developer.apple.com/help/app-store-connect/get-started/app-store-connect-workflow), and [review guidelines](https://developer.apple.com/app-store/review/).
 
----
+## Demo limitations and required review
 
-## 2. Apple App Store Publishing Process
+- The public API is a portfolio/demo service, not a production payroll system. Data is seeded in memory and may reset.
+- Demo sign-in is not production identity management. Do not use real employee or financial data.
+- Wage access and expense approval update sample records only; no bank transfer, payout, push delivery, or production payroll integration is connected.
+- Receipt images are passed to the demo API as data URLs. Replace that flow with access-controlled storage and document retention controls before production.
+- Re-check the current platform requirements, SDK/API target, privacy disclosures, and test-account instructions at submission time.
 
-### 2.1 Certificates, Identifiers & Profiles
-1. **App ID**: Register `ai.heftin.paypulse` in Apple Developer Portal.
-2. **Capabilities Enabled**:
-   - Push Notifications (APNs)
-   - In-App Biometric Authentication (LocalAuthentication / Face ID)
-3. **Distribution Certificate**: Generated and managed securely through EAS Credentials or Apple Developer Console.
-4. **Provisioning Profile**: App Store Distribution Provisioning Profile matching `ai.heftin.paypulse`.
+## Build options in this repository
 
-### 2.2 App Store Connect Privacy Nutrition Labels
-- **Data Used to Track You**: None.
-- **Data Linked to You**:
-  - Financial Info (Payment info for wage advances)
-  - Contact Info (Email address)
-  - User Content (Receipt images)
-  - Identifiers (User ID)
-
-### 2.3 TestFlight Distribution
-1. Build with EAS:
-   ```bash
-   cd mobile
-   eas build --platform ios --profile production --auto-submit
-   ```
-2. Invite internal Heftin testers through TestFlight groups.
-
----
-
-## 3. Versioning Strategy & SemVer
-We follow Semantic Versioning (`MAJOR.MINOR.PATCH`):
-- `MAJOR` (e.g. `2.0.0`): Breaking architectural rewrites or major workflow shifts.
-- `MINOR` (e.g. `2.4.0`): New features (e.g. adding EdTech allowance tracking).
-- `PATCH` (e.g. `2.4.1`): Hotfixes, receipt compression tweaks, and bug fixes.
-- `versionCode` (Android) & `buildNumber` (iOS): Increment monotonically with every EAS build run (handled automatically in `eas.json`).
-
+- `mobile/eas.json` contains Expo internal-preview and production build profiles. EAS account access and platform signing credentials are required to create store-signed builds.
+- `flutter_app/` contains the Flutter/Dart client. The Flutter GitHub Actions workflow builds a debug-signed Android install artifact for demonstration; it is not suitable for Play submission. An iOS simulator build is unsigned and is not an App Store archive.
+- Public store submission remains a manual step after developer accounts, signing credentials, final privacy review, and production services are in place.

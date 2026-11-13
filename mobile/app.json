@@ -16,7 +16,6 @@
       "supportsTablet": true,
       "bundleIdentifier": "ai.heftin.paypulse",
       "infoPlist": {
-        "NSCameraUsageDescription": "PayPulse uses your camera to scan and upload receipt invoices for HR expense reimbursements.",
         "NSPhotoLibraryUsageDescription": "PayPulse accesses your photo library to attach receipt documents to corporate expense claims."
       }
     },
@@ -27,22 +26,26 @@
       },
       "package": "ai.heftin.paypulse",
       "versionCode": 106,
-      "permissions": [
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.POST_NOTIFICATIONS"
-      ]
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "metro"
+      "bundler": "metro",
+      "name": "PayPulse AI",
+      "shortName": "PayPulse",
+      "description": "Employee pay, earned wage access, and expense benefits in one workspace.",
+      "display": "standalone",
+      "startUrl": "/",
+      "scope": "/",
+      "themeColor": "#18364B",
+      "backgroundColor": "#F4F1E9"
     },
     "plugins": [
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allow PayPulse to access your receipts library."
+          "photosPermission": "Allow PayPulse to select receipt images for expense claims.",
+          "cameraPermission": false
         }
       ]
     ],
@@ -50,7 +53,7 @@
       "eas": {
         "projectId": "729b8720-94e1-4c12-a1b7-e2348a19d84e"
       },
-      "apiUrl": "http://10.0.2.2:4000/api",
+      "apiUrl": "https://paypulse-api-three.vercel.app/api",
       "environment": "production"
     }
   }
