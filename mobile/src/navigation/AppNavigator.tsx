@@ -167,7 +167,7 @@ function WebSidebar({ state, navigation, unreadCount, userName, onSignOut }: Bot
               onPress={() => navigation.navigate(route.name)}
               activeOpacity={0.78}
             >
-              <Ionicons name={WEB_ICONS[route.name] || 'ellipse-outline'} size={18} color={focused ? Colors.primary : Colors.textSecondary} />
+              <Ionicons name={WEB_ICONS[route.name] || 'ellipse-outline'} size={18} color={focused ? Colors.accent : '#AABBC2'} />
               <Text style={[styles.webNavText, focused && styles.webNavTextActive]}>{label}</Text>
               {showBadge && <View style={styles.webBadge}><Text style={styles.webBadgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text></View>}
             </TouchableOpacity>
@@ -177,7 +177,7 @@ function WebSidebar({ state, navigation, unreadCount, userName, onSignOut }: Bot
 
       <View style={styles.webSidebarSpacer} />
       <View style={styles.webDemoNote}>
-        <View style={styles.webDemoIcon}><Ionicons name="shield-checkmark-outline" size={17} color={Colors.primary} /></View>
+        <View style={styles.webDemoIcon}><Ionicons name="shield-checkmark-outline" size={17} color={Colors.onPrimary} /></View>
         <Text style={styles.webDemoTitle}>Interactive demo</Text>
         <Text style={styles.webDemoCopy}>Sample INR ledger · no real payments</Text>
       </View>
@@ -234,12 +234,12 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     left: 0,
-    width: 248,
+    width: 256,
     height: '100%',
     borderTopWidth: 0,
   },
   webSceneContainer: {
-    marginLeft: 248,
+    marginLeft: 256,
     backgroundColor: Colors.background,
   },
   mobileSceneContainer: {
@@ -250,44 +250,44 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     left: 0,
-    width: 248,
-    backgroundColor: Colors.card,
+    width: 256,
+    backgroundColor: Colors.primaryDark,
     borderRightWidth: 1,
-    borderRightColor: Colors.border,
-    paddingHorizontal: 17,
-    paddingTop: 24,
+    borderRightColor: '#29465A',
+    paddingHorizontal: 18,
+    paddingTop: 28,
     paddingBottom: 16,
   },
   webBrandRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 11,
+    gap: 12,
     paddingHorizontal: 5,
-    marginBottom: 42,
+    marginBottom: 48,
   },
   webBrandIcon: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
-    backgroundColor: Colors.primary,
+    width: 40,
+    height: 40,
+    borderRadius: 11,
+    backgroundColor: Colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   webBrandName: {
-    fontSize: 18,
+    fontSize: 19,
     fontWeight: '800',
-    color: Colors.text,
-    letterSpacing: -0.4,
+    color: Colors.onPrimary,
+    letterSpacing: -0.6,
   },
   webBrandCaption: {
     fontSize: 8,
     fontWeight: '800',
-    color: Colors.textMuted,
-    letterSpacing: 1.5,
-    marginTop: 1,
+    color: '#AABBC2',
+    letterSpacing: 1.8,
+    marginTop: 3,
   },
   webSectionLabel: {
-    color: Colors.textMuted,
+    color: '#9DAFB8',
     fontSize: 9,
     fontWeight: '800',
     letterSpacing: 1.2,
@@ -300,23 +300,25 @@ const styles = StyleSheet.create({
   webNavItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 43,
-    paddingHorizontal: 11,
-    borderRadius: 11,
+    minHeight: 46,
+    paddingHorizontal: 12,
+    borderRadius: 8,
     gap: 11,
   },
   webNavItemActive: {
-    backgroundColor: Colors.primaryTint,
+    backgroundColor: '#2C4C61',
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.accent,
   },
   webNavText: {
     flex: 1,
     fontSize: 12,
     fontWeight: '600',
-    color: Colors.textSecondary,
+    color: '#B7C4C8',
   },
   webNavTextActive: {
-    fontWeight: '800',
-    color: Colors.primaryDark,
+    fontWeight: '700',
+    color: Colors.onPrimary,
   },
   webBadge: {
     minWidth: 19,
@@ -336,29 +338,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   webDemoNote: {
-    backgroundColor: Colors.primaryTint,
-    borderRadius: 13,
+    backgroundColor: '#24465A',
+    borderRadius: 9,
     padding: 12,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: Colors.borderLight,
+    borderColor: '#3B5A6D',
   },
   webDemoIcon: {
     width: 28,
     height: 28,
-    borderRadius: 9,
-    backgroundColor: Colors.card,
+    borderRadius: 8,
+    backgroundColor: '#34576B',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 9,
   },
   webDemoTitle: {
-    color: Colors.text,
+    color: Colors.onPrimary,
     fontSize: 11,
     fontWeight: '800',
   },
   webDemoCopy: {
-    color: Colors.textSecondary,
+    color: '#C1CDD0',
     fontSize: 9,
     marginTop: 3,
   },
@@ -366,7 +368,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderTopWidth: 1,
-    borderTopColor: Colors.border,
+    borderTopColor: '#3B5667',
     paddingTop: 14,
     paddingHorizontal: 3,
     gap: 9,
@@ -374,13 +376,13 @@ const styles = StyleSheet.create({
   webUserAvatar: {
     width: 34,
     height: 34,
-    borderRadius: 12,
-    backgroundColor: Colors.accentTint,
+    borderRadius: 9,
+    backgroundColor: Colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   webAvatarText: {
-    color: Colors.accent,
+    color: Colors.onPrimary,
     fontSize: 11,
     fontWeight: '800',
   },
@@ -388,12 +390,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   webUserName: {
-    color: Colors.text,
+    color: Colors.onPrimary,
     fontSize: 11,
     fontWeight: '700',
   },
   webUserRole: {
-    color: Colors.textMuted,
+    color: '#AABBC2',
     fontSize: 9,
     marginTop: 2,
   },

@@ -33,7 +33,7 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
 
   return (
     <View style={styles.cardContainer}>
-      {/* Glow top border accent */}
+      {/* Ledger marker */}
       <View style={styles.glowBorder} />
 
       <View style={styles.topRow}>
@@ -54,7 +54,7 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
             {formatINR(available)}
           </Text>
           <View style={styles.changePill}>
-            <Ionicons name="trending-up" size={11} color={Colors.primary} />
+            <Ionicons name="trending-up" size={11} color="#BFD9D9" />
             <Text style={styles.changeText}>{availablePct}% liquid</Text>
           </View>
         </View>
@@ -132,17 +132,17 @@ export const WageCard: React.FC<WageCardProps> = ({ summary, onRequestAdvance, i
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: Colors.card,
-    borderRadius: 20,
-    padding: 20,
+    backgroundColor: Colors.primary,
+    borderRadius: 9,
+    padding: 24,
     borderWidth: 1,
-    borderColor: Colors.border,
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.06,
-    shadowRadius: 18,
-    elevation: 5,
-    marginVertical: 10,
+    borderColor: Colors.primaryDark,
+    shadowColor: Colors.primaryDark,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.11,
+    shadowRadius: 12,
+    elevation: 3,
+    marginVertical: 12,
     overflow: 'hidden',
   },
   glowBorder: {
@@ -150,9 +150,8 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 2,
-    backgroundColor: Colors.primary,
-    opacity: 0.7,
+    height: 4,
+    backgroundColor: Colors.accent,
   },
   topRow: {
     flexDirection: 'row',
@@ -163,22 +162,20 @@ const styles = StyleSheet.create({
   pulseBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.primaryTint,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 20,
+    backgroundColor: '#294B60',
+    paddingHorizontal: 9,
+    paddingVertical: 6,
+    borderRadius: 4,
     gap: 6,
-    borderWidth: 1,
-    borderColor: Colors.border,
   },
   pulseDot: {
     width: 7,
     height: 7,
     borderRadius: 4,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.accent,
   },
   pulseText: {
-    color: Colors.primaryLight,
+    color: '#F9DDD0',
     fontSize: 10,
     fontWeight: '800',
     letterSpacing: 0.8,
@@ -187,15 +184,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: Colors.cardSecondary,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    backgroundColor: '#294B60',
+    paddingHorizontal: 9,
+    paddingVertical: 6,
+    borderRadius: 4,
   },
   dayCounter: {
-    color: Colors.textSecondary,
+    color: '#D5E0E2',
     fontSize: 11,
     fontWeight: '600',
   },
@@ -203,7 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   availableLabel: {
-    color: Colors.textMuted,
+    color: '#BDCCD0',
     fontSize: 12,
     fontWeight: '500',
     letterSpacing: 0.3,
@@ -223,7 +218,7 @@ const styles = StyleSheet.create({
   amountText: {
     fontSize: 42,
     fontWeight: '800',
-    color: Colors.text,
+    color: Colors.onPrimary,
     letterSpacing: -1,
     lineHeight: 48,
   },
@@ -231,26 +226,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: Colors.primaryTint,
-    paddingHorizontal: 7,
-    paddingVertical: 3,
-    borderRadius: 6,
+    backgroundColor: '#36566A',
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 4,
     marginBottom: 6,
-    borderWidth: 1,
-    borderColor: Colors.border,
   },
   changeText: {
     fontSize: 10,
     fontWeight: '700',
-    color: Colors.primary,
+    color: '#BFD9D9',
   },
   subtext: {
-    color: Colors.textSecondary,
+    color: '#D5E0E2',
     fontSize: 12,
     marginTop: 2,
   },
   boldText: {
-    color: Colors.text,
+    color: Colors.onPrimary,
     fontWeight: '700',
   },
   progressBarWrapper: {
@@ -263,24 +256,24 @@ const styles = StyleSheet.create({
   },
   progressLabelLeft: {
     fontSize: 11,
-    color: Colors.textMuted,
+    color: '#BDCCD0',
   },
   progressLabelRight: {
     fontSize: 11,
-    color: Colors.primaryLight,
+    color: '#F7C3AB',
     fontWeight: '700',
   },
   progressBarBackground: {
     height: 10,
-    backgroundColor: Colors.cardSecondary,
-    borderRadius: 5,
+    backgroundColor: '#36566A',
+    borderRadius: 3,
     overflow: 'hidden',
     position: 'relative',
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: Colors.primary,
-    borderRadius: 5,
+    backgroundColor: Colors.accent,
+    borderRadius: 3,
   },
   capMarker: {
     position: 'absolute',
@@ -288,23 +281,21 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     width: 2,
-    backgroundColor: Colors.warning,
+    backgroundColor: '#FFFDF8',
     opacity: 0.8,
   },
   capText: {
     fontSize: 10,
-    color: Colors.warning,
+    color: '#F2C88F',
     marginTop: 4,
     textAlign: 'right',
   },
   statsRow: {
     flexDirection: 'row',
-    backgroundColor: Colors.cardSecondary,
-    borderRadius: 12,
-    padding: 12,
+    backgroundColor: '#24465A',
+    borderRadius: 5,
+    padding: 14,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: Colors.border,
   },
   statItem: {
     flex: 1,
@@ -313,22 +304,22 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 15,
     fontWeight: '800',
-    color: Colors.text,
+    color: Colors.onPrimary,
   },
   statLabel: {
     fontSize: 10,
-    color: Colors.textMuted,
+    color: '#B9C9CE',
     marginTop: 2,
     fontWeight: '500',
   },
   statDivider: {
     width: 1,
-    backgroundColor: Colors.border,
+    backgroundColor: '#496477',
     marginHorizontal: 8,
   },
   advanceButton: {
-    backgroundColor: Colors.primary,
-    borderRadius: 14,
+    backgroundColor: Colors.accent,
+    borderRadius: 6,
     paddingVertical: 15,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -336,12 +327,12 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   disabledButton: {
-    backgroundColor: Colors.cardSecondary,
+    backgroundColor: '#3A515D',
     opacity: 0.6,
   },
   advanceButtonText: {
     color: Colors.onPrimary,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '800',
     letterSpacing: 0.2,
   },
@@ -353,7 +344,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   footerNoteText: {
-    color: Colors.textMuted,
+    color: '#B9C9CE',
     fontSize: 11,
   },
 });

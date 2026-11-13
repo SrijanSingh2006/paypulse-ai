@@ -5,7 +5,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,19 +32,20 @@ export const ProfileSettingsScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+        <Text style={styles.pageKicker}>YOUR ACCOUNT  /  04</Text>
+        <Text style={styles.pageTitle}>Profile & pay details</Text>
         {/* User Card */}
         <View style={styles.profileCard}>
-          <Image
-            source={{ uri: user?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400' }}
-            style={styles.avatar}
-          />
-          <Text style={styles.name}>{user?.name}</Text>
-          <Text style={styles.designation}>{user?.designation}</Text>
-          <Text style={styles.department}>{user?.department}</Text>
-          <View style={[styles.badge, isManager ? styles.badgeManager : styles.badgeEmployee]}>
-            <Text style={styles.badgeText}>
-              {isManager ? 'ROLE: HR & FINANCE MANAGER' : 'ROLE: EMPLOYEE (HEFTIN)'}
-            </Text>
+          <View style={styles.avatar}><Text style={styles.avatarInitials}>{user?.name?.split(' ').map((part) => part[0]).slice(0, 2).join('') || 'PP'}</Text></View>
+          <View style={styles.profileIdentity}>
+            <Text style={styles.name}>{user?.name}</Text>
+            <Text style={styles.designation}>{user?.designation}</Text>
+            <Text style={styles.department}>{user?.department}</Text>
+            <View style={[styles.badge, isManager ? styles.badgeManager : styles.badgeEmployee]}>
+              <Text style={styles.badgeText}>
+                {isManager ? 'PEOPLE OPERATIONS' : 'EMPLOYEE WORKSPACE'}
+              </Text>
+            </View>
           </View>
         </View>
 
@@ -117,32 +117,57 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   content: {
-    padding: 16,
+    padding: 22,
     paddingBottom: 40,
     width: '100%',
     maxWidth: 900,
     alignSelf: 'center',
   },
+  pageKicker: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: Colors.accentLight,
+    letterSpacing: 1.6,
+    marginBottom: 7,
+  },
+  pageTitle: {
+    fontSize: 30,
+    fontWeight: '700',
+    color: Colors.text,
+    letterSpacing: -0.8,
+    marginBottom: 17,
+  },
   profileCard: {
     backgroundColor: Colors.card,
-    borderRadius: 20,
+    borderRadius: 7,
     padding: 20,
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: 16,
     borderWidth: 1,
     borderColor: Colors.border,
     marginBottom: 16,
   },
   avatar: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    borderWidth: 3,
-    borderColor: Colors.primary,
-    marginBottom: 12,
+    width: 68,
+    height: 68,
+    borderRadius: 10,
+    backgroundColor: Colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarInitials: {
+    color: Colors.onPrimary,
+    fontSize: 21,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  profileIdentity: {
+    flex: 1,
   },
   name: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 20,
+    fontWeight: '700',
     color: Colors.text,
   },
   designation: {
@@ -158,14 +183,14 @@ const styles = StyleSheet.create({
   badge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 6,
+    borderRadius: 3,
     marginTop: 10,
   },
   badgeEmployee: {
-    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    backgroundColor: Colors.primaryTint,
   },
   badgeManager: {
-    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+    backgroundColor: Colors.accentTint,
   },
   badgeText: {
     fontSize: 11,
@@ -194,7 +219,7 @@ const styles = StyleSheet.create({
     gap: 6,
     backgroundColor: Colors.card,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 6,
     borderWidth: 1,
     borderColor: Colors.border,
   },
@@ -212,7 +237,7 @@ const styles = StyleSheet.create({
   },
   cardGroup: {
     backgroundColor: Colors.card,
-    borderRadius: 16,
+    borderRadius: 7,
     padding: 16,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -262,10 +287,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    backgroundColor: '#F8E8E3',
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.3)',
-    borderRadius: 14,
+    borderColor: '#E9C8BD',
+    borderRadius: 6,
     paddingVertical: 14,
     marginVertical: 12,
   },

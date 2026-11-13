@@ -85,11 +85,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+    backgroundColor: Colors.accentTint,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(99, 102, 241, 0.25)',
+    borderBottomColor: '#EBD4C8',
   },
   left: {
     flexDirection: 'row',
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   dialog: {
     width: '100%',
     backgroundColor: Colors.card,
-    borderRadius: 18,
+    borderRadius: 8,
     padding: 20,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   closeBtn: {
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: 7,
     backgroundColor: Colors.cardSecondary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -199,9 +199,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   closeActionBtn: {
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.accent,
     paddingVertical: 12,
-    borderRadius: 10,
+    borderRadius: 5,
     alignItems: 'center',
   },
   closeActionText: {

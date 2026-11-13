@@ -2,7 +2,7 @@
   "expo": {
     "name": "PayPulse AI",
     "slug": "paypulse-mobile",
-    "version": "2.5.0",
+    "version": "2.6.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -26,7 +26,7 @@
         "backgroundColor": "#F4F7F6"
       },
       "package": "ai.heftin.paypulse",
-      "versionCode": 105,
+      "versionCode": 106,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",

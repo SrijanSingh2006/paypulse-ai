@@ -88,13 +88,13 @@ export const AICopilotScreen: React.FC = () => {
       <View style={styles.header}>
         <View style={styles.headerLeft}>
           <View style={styles.aiAvatar}>
-            <Ionicons name="sparkles" size={20} color={Colors.primary} />
+            <Ionicons name="sparkles" size={20} color="#F5B79D" />
           </View>
           <View>
             <Text style={styles.headerTitle}>Benefits Copilot</Text>
             <View style={styles.onlineRow}>
               <View style={styles.onlineDot} />
-            <Text style={styles.onlineText}>Demo workspace · benefits guide</Text>
+            <Text style={styles.onlineText}>WORKSPACE GUIDE  /  RULE-BASED DEMO</Text>
             </View>
           </View>
         </View>
@@ -226,11 +226,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: Colors.card,
+    paddingHorizontal: 22,
+    paddingVertical: 17,
+    backgroundColor: Colors.primary,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    borderBottomColor: Colors.primaryDark,
   },
   headerLeft: {
     flexDirection: 'row',
@@ -240,17 +240,17 @@ const styles = StyleSheet.create({
   aiAvatar: {
     width: 42,
     height: 42,
-    borderRadius: 21,
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    borderRadius: 9,
+    backgroundColor: '#294B60',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
+    borderColor: '#3B5A6D',
   },
   headerTitle: {
     fontSize: 16,
     fontWeight: '800',
-    color: Colors.text,
+    color: Colors.onPrimary,
   },
   onlineRow: {
     flexDirection: 'row',
@@ -266,23 +266,23 @@ const styles = StyleSheet.create({
   },
   onlineText: {
     fontSize: 11,
-    color: Colors.textSecondary,
+    color: '#BFCFD2',
     fontWeight: '500',
   },
   poweredBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+    backgroundColor: '#294B60',
     paddingHorizontal: 10,
     paddingVertical: 5,
-    borderRadius: 8,
+    borderRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(129, 140, 248, 0.25)',
+    borderColor: '#3B5A6D',
   },
   poweredText: {
     fontSize: 11,
-    color: Colors.accentLight,
+    color: '#F5B79D',
     fontWeight: '700',
   },
   chatArea: {
@@ -310,27 +310,27 @@ const styles = StyleSheet.create({
   aiBubbleAvatar: {
     width: 28,
     height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    borderRadius: 7,
+    backgroundColor: Colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.2)',
+    borderColor: Colors.border,
   },
   messageBubble: {
     maxWidth: '75%',
-    borderRadius: 16,
+    borderRadius: 7,
     padding: 12,
   },
   userBubble: {
-    backgroundColor: Colors.primary,
-    borderBottomRightRadius: 4,
+    backgroundColor: Colors.accent,
+    borderBottomRightRadius: 2,
   },
   aiBubble: {
     backgroundColor: Colors.card,
     borderWidth: 1,
     borderColor: Colors.border,
-    borderBottomLeftRadius: 4,
+    borderBottomLeftRadius: 2,
   },
   typingBubble: {
     flexDirection: 'row',
@@ -365,10 +365,10 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 10,
     paddingVertical: 7,
-    borderRadius: 10,
+    borderRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(129, 140, 248, 0.3)',
-    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+    borderColor: '#EBD4C8',
+    backgroundColor: Colors.accentTint,
   },
   responseActionText: {
     color: Colors.accentLight,
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
   },
   userMessageTime: {
-    color: 'rgba(255,255,255,0.8)',
+    color: 'rgba(255,253,248,0.82)',
   },
   typingText: {
     color: Colors.textSecondary,
@@ -406,11 +406,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     backgroundColor: Colors.card,
-    borderRadius: 10,
+    borderRadius: 4,
     paddingVertical: 11,
     paddingHorizontal: 14,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.2)',
+    borderColor: Colors.border,
   },
   suggestionText: {
     color: Colors.text,
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     backgroundColor: Colors.background,
-    borderRadius: 14,
+    borderRadius: 6,
     paddingHorizontal: 14,
     paddingVertical: 11,
     color: Colors.text,
@@ -442,8 +442,8 @@ const styles = StyleSheet.create({
   sendBtn: {
     width: 44,
     height: 44,
-    borderRadius: 22,
-    backgroundColor: Colors.primary,
+    borderRadius: 7,
+    backgroundColor: Colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },

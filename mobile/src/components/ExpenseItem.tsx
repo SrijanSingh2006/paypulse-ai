@@ -38,11 +38,11 @@ export const ExpenseItem: React.FC<ExpenseItemProps> = ({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'APPROVED':
-        return { text: 'Approved', bg: 'rgba(16, 185, 129, 0.15)', textCol: Colors.success };
+        return { text: 'Approved', bg: '#E2EEE9', textCol: Colors.success };
       case 'REJECTED':
-        return { text: 'Rejected', bg: 'rgba(239, 68, 68, 0.15)', textCol: Colors.danger };
+        return { text: 'Rejected', bg: '#F7E3DE', textCol: Colors.danger };
       default:
-        return { text: 'Pending Review', bg: 'rgba(245, 158, 11, 0.15)', textCol: Colors.warning };
+        return { text: 'Pending Review', bg: '#F4EBD8', textCol: Colors.warning };
     }
   };
 
@@ -123,8 +123,8 @@ export const ExpenseItem: React.FC<ExpenseItemProps> = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.card,
-    borderRadius: 14,
-    padding: 16,
+    borderRadius: 7,
+    padding: 18,
     marginBottom: 12,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 6,
+    borderRadius: 3,
     gap: 4,
   },
   categoryText: {
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   statusBadge: {
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 6,
+    borderRadius: 3,
   },
   statusText: {
     fontSize: 11,
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.cardSecondary,
     padding: 8,
-    borderRadius: 8,
+    borderRadius: 4,
     marginTop: 10,
     gap: 6,
   },
@@ -240,9 +240,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 6,
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    backgroundColor: '#F8E8E3',
     borderWidth: 1,
-    borderColor: 'rgba(239, 68, 68, 0.3)',
+    borderColor: '#E9C8BD',
   },
   rejectText: {
     fontSize: 12,

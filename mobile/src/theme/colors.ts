@@ -1,36 +1,36 @@
 export const Colors = {
-  // Brand
-  primary: '#087A58',
-  primaryDark: '#066147',
-  primaryLight: '#0C8A63',
-  onPrimary: '#FFFFFF',
-  primaryTint: '#EAF5EF',
-  accent: '#5B5BD6',
-  accentLight: '#4E4AB8',
-  accentTint: '#F0EFFC',
+  // Ink, paper, and vermilion: a ledger-inspired visual system.
+  primary: '#18364B',
+  primaryDark: '#102A3C',
+  primaryLight: '#2B5871',
+  onPrimary: '#FFFDF8',
+  primaryTint: '#E4ECEF',
+  accent: '#D56B4C',
+  accentLight: '#B95036',
+  accentTint: '#F7E5DC',
 
-  // Neutrals / Surfaces
-  background: '#F4F7F6',
-  card: '#FFFFFF',
-  cardSecondary: '#EFF4F2',
-  border: '#DDE7E3',
-  borderLight: '#E8EFEC',
+  // Warm paper surfaces and quiet rules.
+  background: '#F4F1E9',
+  card: '#FFFEFA',
+  cardSecondary: '#ECE8DE',
+  border: '#D9D4C9',
+  borderLight: '#E8E3D9',
 
-  // Text
-  text: '#17231E',
-  textSecondary: '#52635B',
-  textMuted: '#718179',
+  // Ink hierarchy.
+  text: '#202A31',
+  textSecondary: '#57646C',
+  textMuted: '#7B8588',
 
-  // Status Colors
-  success: '#087A58',
-  warning: '#A35E08',
-  danger: '#C2413A',
-  info: '#2367A3',
+  // Status and chart colors.
+  success: '#287565',
+  warning: '#B4772E',
+  danger: '#B84F45',
+  info: '#39788C',
 
-  // Special Category Accents
-  edTech: '#7652C8',
-  travel: '#147DA5',
-  hardware: '#C24679',
-  meals: '#C65A2E',
+  // Expense category accents.
+  edTech: '#8D6844',
+  travel: '#39788C',
+  hardware: '#B15C50',
+  meals: '#A77832',
 };
 

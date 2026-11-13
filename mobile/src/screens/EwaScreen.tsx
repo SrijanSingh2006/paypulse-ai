@@ -53,9 +53,10 @@ export const EwaScreen: React.FC = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />
         }
       >
-        <Text style={styles.headerTitle}>Earned Wage Access (EWA)</Text>
+        <Text style={styles.headerKicker}>PAY & ACCESS  /  01</Text>
+        <Text style={styles.headerTitle}>Your wage, before payday.</Text>
         <Text style={styles.headerSubtitle}>
-          Explore an earned wage workflow. Advance actions update a demo ledger; no real payments move.
+          See what has accrued, what you can access, and how the monthly limit is calculated.
         </Text>
 
         <WageCard
@@ -141,34 +142,42 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   content: {
-    padding: 16,
+    padding: 22,
     paddingBottom: 40,
     width: '100%',
-    maxWidth: 1100,
+    maxWidth: 1180,
     alignSelf: 'center',
   },
-  headerTitle: {
-    fontSize: 22,
+  headerKicker: {
+    fontSize: 10,
     fontWeight: '800',
+    color: Colors.accentLight,
+    letterSpacing: 1.6,
+    marginBottom: 8,
+  },
+  headerTitle: {
+    fontSize: 30,
+    fontWeight: '700',
     color: Colors.text,
+    letterSpacing: -0.8,
   },
   headerSubtitle: {
-    fontSize: 13,
+    fontSize: 14,
     color: Colors.textSecondary,
-    marginTop: 4,
-    marginBottom: 8,
-    lineHeight: 18,
+    marginTop: 8,
+    marginBottom: 14,
+    lineHeight: 21,
   },
   metricsCard: {
     backgroundColor: Colors.card,
-    borderRadius: 16,
-    padding: 18,
+    borderRadius: 7,
+    padding: 21,
     borderWidth: 1,
     borderColor: Colors.border,
     marginVertical: 10,
   },
   cardHeader: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
     color: Colors.text,
     marginBottom: 14,
@@ -208,8 +217,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: Colors.card,
-    borderRadius: 14,
-    padding: 16,
+    borderRadius: 7,
+    padding: 17,
     borderWidth: 1,
     borderColor: Colors.border,
     marginBottom: 16,
@@ -233,7 +242,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    backgroundColor: Colors.primaryTint,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,

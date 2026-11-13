@@ -92,6 +92,11 @@ export const ExpensesScreen: React.FC = () => {
   const edTechBudget = 50000;
   const edTechRemaining = Math.max(0, edTechBudget - edTechSpent);
   const edTechProgress = Math.min(100, Math.round((edTechSpent / edTechBudget) * 100));
+  const pendingCount = claims.filter((claim) => claim.status === 'PENDING').length;
+  const approvedCount = claims.filter((claim) => claim.status === 'APPROVED' || claim.status === 'DISBURSED').length;
+  const pendingValue = claims
+    .filter((claim) => claim.status === 'PENDING')
+    .reduce((total, claim) => total + claim.amount, 0);
   const visibleClaims = claims.filter((claim) => {
     const matchesStatus = selectedStatus === 'ALL' || claim.status === selectedStatus;
     const matchesCategory = selectedCategory === 'ALL' || claim.category === selectedCategory;
@@ -109,14 +114,32 @@ export const ExpensesScreen: React.FC = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />
         }
       >
+        <Text style={styles.headerKicker}>{isManager ? 'PEOPLE OPERATIONS  /  02' : 'CLAIMS & BENEFITS  /  02'}</Text>
         <Text style={styles.headerTitle}>
-          {isManager ? 'HR Expense Management' : 'Expense & Reimbursements'}
+          {isManager ? 'Review team claims.' : 'Track your claims.'}
         </Text>
         <Text style={styles.headerSubtitle}>
           {isManager
-            ? 'Review team claims in the demo workspace. Decisions update the local review ledger.'
-            : 'Submit and track reimbursement claims. This demo keeps changes in its workspace ledger.'}
+            ? 'A clear queue for policy checks, decisions, and reimbursement status.'
+            : 'Submit a reimbursement and follow it from submission through review.'}
         </Text>
+
+        <View style={styles.summaryStrip}>
+          <View style={styles.summaryMetric}>
+            <Text style={styles.summaryLabel}>PENDING</Text>
+            <Text style={styles.summaryValue}>{pendingCount}</Text>
+          </View>
+          <View style={styles.summaryRule} />
+          <View style={styles.summaryMetric}>
+            <Text style={styles.summaryLabel}>APPROVED</Text>
+            <Text style={styles.summaryValue}>{approvedCount}</Text>
+          </View>
+          <View style={styles.summaryRule} />
+          <View style={styles.summaryMetricWide}>
+            <Text style={styles.summaryLabel}>PENDING VALUE</Text>
+            <Text style={styles.summaryValueMoney}>{formatINR(pendingValue, 0)}</Text>
+          </View>
+        </View>
 
         <View style={styles.searchBox}>
           <Ionicons name="search-outline" size={17} color={Colors.textMuted} />
@@ -254,23 +277,73 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   content: {
-    padding: 16,
+    padding: 22,
     paddingBottom: 80,
     width: '100%',
-    maxWidth: 1100,
+    maxWidth: 1180,
     alignSelf: 'center',
   },
-  headerTitle: {
-    fontSize: 22,
+  headerKicker: {
+    fontSize: 10,
     fontWeight: '800',
+    color: Colors.accentLight,
+    letterSpacing: 1.6,
+    marginBottom: 8,
+  },
+  headerTitle: {
+    fontSize: 30,
+    fontWeight: '700',
     color: Colors.text,
+    letterSpacing: -0.8,
   },
   headerSubtitle: {
-    fontSize: 13,
+    fontSize: 14,
     color: Colors.textSecondary,
-    marginTop: 4,
-    marginBottom: 12,
-    lineHeight: 18,
+    marginTop: 8,
+    marginBottom: 17,
+    lineHeight: 21,
+  },
+  summaryStrip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.card,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderRadius: 7,
+    paddingVertical: 14,
+    paddingHorizontal: 17,
+    marginBottom: 16,
+  },
+  summaryMetric: {
+    flex: 0.8,
+  },
+  summaryMetricWide: {
+    flex: 1.4,
+    paddingLeft: 15,
+  },
+  summaryRule: {
+    width: 1,
+    height: 35,
+    backgroundColor: Colors.border,
+    marginHorizontal: 15,
+  },
+  summaryLabel: {
+    color: Colors.textMuted,
+    fontSize: 9,
+    fontWeight: '800',
+    letterSpacing: 1,
+  },
+  summaryValue: {
+    color: Colors.text,
+    fontSize: 22,
+    fontWeight: '700',
+    marginTop: 3,
+  },
+  summaryValueMoney: {
+    color: Colors.primary,
+    fontSize: 17,
+    fontWeight: '700',
+    marginTop: 5,
   },
   searchBox: {
     flexDirection: 'row',
@@ -279,7 +352,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.card,
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: 12,
+    borderRadius: 6,
     paddingHorizontal: 12,
     marginBottom: 12,
   },
@@ -291,8 +364,8 @@ const styles = StyleSheet.create({
   },
   stipendCard: {
     backgroundColor: Colors.card,
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 7,
+    padding: 18,
     borderWidth: 1,
     borderColor: Colors.border,
     marginBottom: 16,
@@ -307,7 +380,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(139, 92, 246, 0.15)',
+    backgroundColor: Colors.accentTint,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 6,
@@ -328,7 +401,7 @@ const styles = StyleSheet.create({
   progressBackground: {
     height: 8,
     backgroundColor: Colors.cardSecondary,
-    borderRadius: 4,
+    borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
@@ -354,7 +427,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cardSecondary,
     paddingHorizontal: 14,
     paddingVertical: 7,
-    borderRadius: 20,
+    borderRadius: 5,
     borderWidth: 1,
     borderColor: Colors.border,
   },
@@ -376,7 +449,7 @@ const styles = StyleSheet.create({
   },
   emptyContainer: {
     backgroundColor: Colors.card,
-    borderRadius: 14,
+    borderRadius: 7,
     padding: 30,
     alignItems: 'center',
     borderWidth: 1,
@@ -393,11 +466,11 @@ const styles = StyleSheet.create({
     bottom: 24,
     width: 56,
     height: 56,
-    borderRadius: 28,
-    backgroundColor: Colors.primary,
+    borderRadius: 8,
+    backgroundColor: Colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: Colors.primary,
+    shadowColor: Colors.accent,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

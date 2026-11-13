@@ -50,9 +50,9 @@ export const LoginScreen: React.FC = () => {
             </View>
           </View>
           <Text style={styles.brandTitle}>PayPulse AI</Text>
-          <Text style={styles.brandTagline}>Financial wellbeing, made visible.</Text>
+          <Text style={styles.brandTagline}>Your pay, on your terms.</Text>
           <Text style={[styles.brandSub, wideLayout && styles.brandSubWide]}>
-            One workspace for earned wages, expense reimbursements and your monthly pay story.
+            See what you have earned, follow reimbursements, and keep your month in view.
           </Text>
 
           {/* Feature pills */}
@@ -69,9 +69,9 @@ export const LoginScreen: React.FC = () => {
         <View style={[styles.authColumn, wideLayout && styles.authColumnWide]}>
         {/* Form Card */}
         <View style={styles.formCard}>
-          <Text style={styles.formEyebrow}>PAYPULSE WORKSPACE</Text>
-          <Text style={styles.formTitle}>Welcome back</Text>
-          <Text style={styles.formSubtitle}>Sign in to continue to your benefits dashboard.</Text>
+          <Text style={styles.formEyebrow}>MEMBER ACCESS</Text>
+          <Text style={styles.formTitle}>Sign in</Text>
+          <Text style={styles.formSubtitle}>Use your work email, or choose a demo role to explore PayPulse.</Text>
 
           <Text style={styles.label}>Corporate Email</Text>
           <View style={styles.inputWrapper}>
@@ -133,7 +133,7 @@ export const LoginScreen: React.FC = () => {
         <View style={styles.demoSection}>
           <View style={styles.demoLabelRow}>
             <View style={styles.demoLine} />
-            <Text style={styles.demoLabel}>1-Tap Demo Access</Text>
+            <Text style={styles.demoLabel}>EXPLORE A DEMO ROLE</Text>
             <View style={styles.demoLine} />
           </View>
 
@@ -203,18 +203,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 64,
-    maxWidth: 1120,
-    paddingHorizontal: 48,
+    gap: 44,
+    maxWidth: 1240,
+    paddingHorizontal: 42,
   },
   brandContainer: {
     alignItems: 'center',
     marginBottom: 28,
+    width: '100%',
+    backgroundColor: Colors.primary,
+    borderRadius: 9,
+    paddingHorizontal: 22,
+    paddingVertical: 25,
   },
   brandContainerWide: {
     alignItems: 'flex-start',
     flex: 1,
+    width: 'auto',
     marginBottom: 0,
+    minHeight: 435,
+    justifyContent: 'center',
+    paddingHorizontal: 42,
+    paddingVertical: 38,
   },
   authColumn: {
     width: '100%',
@@ -222,9 +232,10 @@ const styles = StyleSheet.create({
   authColumnWide: {
     flex: 1,
     maxWidth: 430,
+    width: 'auto',
   },
   logoGlow: {
-    shadowColor: Colors.primary,
+    shadowColor: Colors.accent,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.15,
     shadowRadius: 16,
@@ -232,33 +243,33 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   logoCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
-    backgroundColor: Colors.primaryTint,
+    width: 58,
+    height: 58,
+    borderRadius: 12,
+    backgroundColor: Colors.accent,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: '#E5896F',
   },
   brandTitle: {
-    fontSize: 42,
-    fontWeight: '800',
-    color: Colors.text,
-    letterSpacing: -0.5,
+    fontSize: 39,
+    fontWeight: '700',
+    color: Colors.onPrimary,
+    letterSpacing: -1.1,
   },
   brandTagline: {
-    fontSize: 17,
-    color: Colors.primary,
+    fontSize: 19,
+    color: '#F5B79D',
     fontWeight: '700',
-    marginTop: 8,
+    marginTop: 10,
   },
   brandSub: {
     fontSize: 14,
-    color: Colors.textMuted,
+    color: '#CBD7D8',
     textAlign: 'center',
     marginTop: 6,
-    maxWidth: 420,
+    maxWidth: 390,
     lineHeight: 22,
   },
   brandSubWide: {
@@ -275,30 +286,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(16, 185, 129, 0.08)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
+    backgroundColor: '#294B60',
+    paddingHorizontal: 9,
+    paddingVertical: 6,
+    borderRadius: 4,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.2)',
+    borderColor: '#3A5A6C',
   },
   featurePillText: {
     fontSize: 10,
-    color: Colors.primaryLight,
+    color: '#E3E8E5',
     fontWeight: '600',
   },
   formCard: {
     backgroundColor: Colors.card,
-    borderRadius: 20,
-    padding: 24,
+    borderRadius: 9,
+    padding: 25,
     borderWidth: 1,
     borderColor: Colors.border,
     marginBottom: 20,
-    shadowColor: '#10231B',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.06,
-    shadowRadius: 24,
-    elevation: 3,
+    shadowColor: '#1F2933',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.055,
+    shadowRadius: 12,
+    elevation: 2,
   },
   formEyebrow: {
     color: Colors.primary,
@@ -308,8 +319,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   formTitle: {
-    fontSize: 25,
-    fontWeight: '800',
+    fontSize: 28,
+    fontWeight: '700',
     color: Colors.text,
     marginBottom: 4,
   },
@@ -332,7 +343,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.background,
-    borderRadius: 12,
+    borderRadius: 6,
     borderWidth: 1,
     borderColor: Colors.border,
     marginBottom: 4,
@@ -355,7 +366,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     backgroundColor: Colors.primary,
-    borderRadius: 14,
+    borderRadius: 6,
     paddingVertical: 15,
     alignItems: 'center',
     marginTop: 18,
@@ -402,23 +413,23 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.card,
     paddingVertical: 13,
     paddingHorizontal: 14,
-    borderRadius: 14,
+    borderRadius: 7,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.25)',
+    borderColor: Colors.border,
   },
   demoBtnManager: {
-    borderColor: 'rgba(129, 140, 248, 0.3)',
+    borderColor: Colors.border,
   },
   demoBtnIcon: {
     width: 32,
     height: 32,
     borderRadius: 10,
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    backgroundColor: Colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },
   demoBtnIconManager: {
-    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+    backgroundColor: Colors.accentTint,
   },
   demoBtnTitle: {
     fontSize: 13,

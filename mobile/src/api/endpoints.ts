@@ -443,17 +443,17 @@ export const Api = {
   async checkVersion(): Promise<ReleaseInfo> {
     if (isWebProduction) {
       return {
-        latestVersion: '2.5.0',
-        buildNumber: 105,
+        latestVersion: '2.6.0',
+        buildNumber: 106,
         minimumRequiredVersion: '2.0.0',
         forceUpdate: false,
         updateRecommended: false,
         releaseDate: new Date().toISOString(),
         whatsNew: [
-          '☀️ Responsive light workspace with employee and HR manager sign-in',
-          '₹ Indian rupee wage, reimbursement, and allowance ledger',
-          '🔎 Claim search and status filters with receipt review',
-          '📅 Payday outlook and downloadable payslip summary',
+          'A new paper-and-ink visual system across the workspace',
+          'Role-specific employee and HR manager dashboards',
+          'INR wage, reimbursement, and allowance summaries',
+          'Claim review, search, filters, and payslip export',
         ],
         storeUrl: '',
         environment: 'portfolio-demo',
@@ -465,17 +465,17 @@ export const Api = {
     } catch (e) {
       if (!shouldUseOfflineFallback(e)) throw e;
       return {
-        latestVersion: '2.5.0',
-        buildNumber: 105,
+        latestVersion: '2.6.0',
+        buildNumber: 106,
         minimumRequiredVersion: '2.0.0',
         forceUpdate: false,
         updateRecommended: false,
         releaseDate: new Date().toISOString(),
         whatsNew: [
-          '☀️ Responsive light workspace with employee and HR manager sign-in',
-          '₹ Indian rupee wage, reimbursement, and allowance ledger',
-          '🔎 Claim search and status filters with receipt review',
-          '📅 Payday outlook and downloadable payslip summary',
+          'A new paper-and-ink visual system across the workspace',
+          'Role-specific employee and HR manager dashboards',
+          'INR wage, reimbursement, and allowance summaries',
+          'Claim review, search, filters, and payslip export',
         ],
         storeUrl: '',
         environment: 'portfolio-demo',

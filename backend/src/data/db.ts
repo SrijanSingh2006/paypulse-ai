@@ -207,7 +207,7 @@ export const database = {
     {
       id: 'notif_003',
       userId: 'usr_heftin_001',
-      title: 'PayPulse 2.5.0 is ready',
+      title: 'PayPulse 2.6.0 is ready',
       message: 'New light workspace, INR payroll summaries, payday outlook, and claim search are available.',
       type: 'SYSTEM_ALERT' as const,
       read: false,

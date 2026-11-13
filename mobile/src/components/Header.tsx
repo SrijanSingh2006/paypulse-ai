@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../theme/colors';
 import { useAuth } from '../context/AuthContext';
@@ -17,25 +17,14 @@ export const Header: React.FC<HeaderProps> = ({ onNotificationPress }) => {
 
   return (
     <View style={styles.container}>
-      {/* Subtle top accent line */}
-      <View style={styles.accentLine} />
-
       <View style={styles.row}>
         <View style={styles.leftRow}>
           <View style={styles.avatarWrapper}>
-            <Image
-              source={{
-                uri:
-                  user?.avatarUrl ||
-                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400',
-              }}
-              style={styles.avatar}
-            />
-            <View style={styles.onlineDot} />
+            <Text style={styles.avatarText}>{user?.name?.split(' ').map((part) => part[0]).slice(0, 2).join('') || 'PP'}</Text>
           </View>
 
           <View style={styles.textContainer}>
-            <Text style={styles.greeting}>Welcome back,</Text>
+            <Text style={styles.greeting}>PAYPULSE  /  PERSONAL FINANCE</Text>
             <Text style={styles.userName}>{user?.name || 'Heftin Member'}</Text>
             <View style={styles.roleRow}>
               <View style={[styles.roleBadge, isManager ? styles.badgeManager : styles.badgeEmployee]}>
@@ -45,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ onNotificationPress }) => {
                   color={isManager ? Colors.accentLight : Colors.primaryLight}
                 />
                 <Text style={[styles.roleBadgeText, isManager && styles.roleBadgeTextManager]}>
-                  {isManager ? 'HR & FINANCE MANAGER' : 'EMPLOYEE (HEFTIN AI)'}
+                  {isManager ? 'PEOPLE OPERATIONS' : 'EMPLOYEE WORKSPACE'}
                 </Text>
               </View>
             </View>
@@ -83,23 +72,17 @@ export const Header: React.FC<HeaderProps> = ({ onNotificationPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.card,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
-    paddingBottom: 12,
-  },
-  accentLine: {
-    height: 2,
-    backgroundColor: Colors.primary,
-    opacity: 0.6,
-    marginBottom: 2,
+    paddingBottom: 15,
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingHorizontal: 22,
+    paddingTop: 19,
     width: '100%',
     maxWidth: 1120,
     alignSelf: 'center',
@@ -110,42 +93,37 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatarWrapper: {
-    position: 'relative',
-    marginRight: 12,
+    width: 44,
+    height: 44,
+    borderRadius: 10,
+    marginRight: 13,
+    backgroundColor: Colors.accentTint,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#EACDBF',
   },
-  avatar: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    borderWidth: 2.5,
-    borderColor: Colors.primary,
-  },
-  onlineDot: {
-    position: 'absolute',
-    bottom: 1,
-    right: 1,
-    width: 11,
-    height: 11,
-    borderRadius: 6,
-    backgroundColor: Colors.success,
-    borderWidth: 2,
-    borderColor: Colors.background,
+  avatarText: {
+    color: Colors.accentLight,
+    fontSize: 13,
+    fontWeight: '800',
+    letterSpacing: 0.4,
   },
   textContainer: {
     justifyContent: 'center',
   },
   greeting: {
-    fontSize: 11,
+    fontSize: 9,
     color: Colors.textMuted,
-    fontWeight: '500',
-    letterSpacing: 0.2,
+    fontWeight: '800',
+    letterSpacing: 1.15,
   },
   userName: {
-    fontSize: 17,
+    fontSize: 20,
     color: Colors.text,
-    fontWeight: '800',
-    letterSpacing: -0.3,
-    marginTop: 1,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    marginTop: 3,
   },
   roleRow: {
     marginTop: 3,
@@ -154,26 +132,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    paddingHorizontal: 7,
-    paddingVertical: 2.5,
-    borderRadius: 5,
+    paddingHorizontal: 0,
+    paddingVertical: 2,
+    borderRadius: 0,
     alignSelf: 'flex-start',
   },
   badgeEmployee: {
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.25)',
+    backgroundColor: 'transparent',
   },
   badgeManager: {
-    backgroundColor: 'rgba(99, 102, 241, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(129, 140, 248, 0.3)',
+    backgroundColor: 'transparent',
   },
   roleBadgeText: {
     fontSize: 9,
     fontWeight: '800',
-    color: Colors.primaryLight,
-    letterSpacing: 0.5,
+    color: Colors.textSecondary,
+    letterSpacing: 1.0,
   },
   roleBadgeTextManager: {
     color: Colors.accentLight,
@@ -186,13 +160,13 @@ const styles = StyleSheet.create({
   roleToggleBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(16, 185, 129, 0.08)',
-    paddingHorizontal: 9,
-    paddingVertical: 7,
-    borderRadius: 9,
+    gap: 6,
+    backgroundColor: Colors.background,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderRadius: 7,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.25)',
+    borderColor: Colors.border,
   },
   roleToggleText: {
     fontSize: 11,

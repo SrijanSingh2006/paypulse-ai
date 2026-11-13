@@ -62,8 +62,9 @@ export const NotificationsScreen: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <View>
-          <Text style={styles.title}>Notification Center</Text>
-          <Text style={styles.subtitle}>Payroll updates, advances & approvals</Text>
+          <Text style={styles.kicker}>ACCOUNT ACTIVITY  /  03</Text>
+          <Text style={styles.title}>Activity</Text>
+          <Text style={styles.subtitle}>Pay updates, advances, and claim decisions in one place.</Text>
         </View>
       </View>
 
@@ -123,28 +124,37 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   headerRow: {
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 10,
+    paddingHorizontal: 22,
+    paddingTop: 24,
+    paddingBottom: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    width: '100%',
+    maxWidth: 1000,
+    alignSelf: 'center',
+  },
+  kicker: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: Colors.accentLight,
+    letterSpacing: 1.6,
+    marginBottom: 7,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '800',
+    fontSize: 30,
+    fontWeight: '700',
     color: Colors.text,
+    letterSpacing: -0.8,
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: 14,
     color: Colors.textSecondary,
-    marginTop: 2,
+    marginTop: 6,
   },
   list: {
-    padding: 16,
-    gap: 10,
+    padding: 22,
+    gap: 8,
     width: '100%',
     maxWidth: 900,
     alignSelf: 'center',
@@ -152,20 +162,21 @@ const styles = StyleSheet.create({
   itemCard: {
     flexDirection: 'row',
     backgroundColor: Colors.card,
-    borderRadius: 14,
-    padding: 14,
+    borderRadius: 7,
+    padding: 16,
     borderWidth: 1,
     borderColor: Colors.border,
     alignItems: 'flex-start',
   },
   unreadCard: {
-    borderColor: 'rgba(16, 185, 129, 0.4)',
-    backgroundColor: Colors.primaryTint,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.accent,
+    backgroundColor: '#FFF9F4',
   },
   iconCircle: {
     width: 40,
     height: 40,
-    borderRadius: 20,
+    borderRadius: 7,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,

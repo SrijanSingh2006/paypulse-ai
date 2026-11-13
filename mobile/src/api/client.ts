@@ -27,7 +27,7 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
   async (config) => {
     try {
-      const token = await AsyncStorage.getItem('@paypulse_token_v2');
+      const token = await AsyncStorage.getItem('@paypulse_token_v3');
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -248,7 +248,7 @@ let activeDemoRole: 'EMPLOYEE' | 'HR_MANAGER' = 'EMPLOYEE';
 let demoStoreReady = false;
 let demoStoreHydration: Promise<void> | null = null;
 
-const DEMO_STORE_KEY = '@paypulse_demo_state_v2';
+const DEMO_STORE_KEY = '@paypulse_demo_state_v3';
 
 export async function hydrateDemoStore(): Promise<void> {
   if (!isWebProduction || demoStoreReady) return;

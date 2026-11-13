@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     backgroundColor: Colors.card,
-    borderRadius: 20,
+    borderRadius: 9,
     padding: 22,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   closeBtn: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 8,
     backgroundColor: Colors.cardSecondary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   grossBox: {
     backgroundColor: Colors.cardSecondary,
     padding: 14,
-    borderRadius: 12,
+    borderRadius: 6,
     marginBottom: 16,
   },
   grossLabel: {
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   badgeZeroFee: {
     fontSize: 10,
     color: Colors.primary,
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    backgroundColor: Colors.primaryTint,
     paddingHorizontal: 4,
     paddingVertical: 1,
     borderRadius: 4,
@@ -204,10 +204,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+    backgroundColor: Colors.primaryTint,
     borderWidth: 1,
-    borderColor: 'rgba(16, 185, 129, 0.3)',
-    borderRadius: 14,
+    borderColor: Colors.border,
+    borderRadius: 6,
     padding: 14,
     marginBottom: 16,
   },
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 6,
     gap: 8,
   },
   pdfBtnText: {

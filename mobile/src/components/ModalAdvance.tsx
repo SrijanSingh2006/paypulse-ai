@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   closeBtn: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 8,
     backgroundColor: Colors.cardSecondary,
     alignItems: 'center',
     justifyContent: 'center',
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.background,
-    borderRadius: 16,
+    borderRadius: 7,
     paddingVertical: 12,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -278,13 +278,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.cardSecondary,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 5,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.border,
   },
   activePreset: {
-    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+    backgroundColor: Colors.primaryTint,
     borderColor: Colors.primary,
   },
   presetText: {
@@ -311,14 +311,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 12,
-    borderRadius: 12,
+    borderRadius: 6,
     backgroundColor: Colors.cardSecondary,
     borderWidth: 1,
     borderColor: Colors.border,
   },
   optionCardActive: {
     borderColor: Colors.primary,
-    backgroundColor: 'rgba(16, 185, 129, 0.08)',
+    backgroundColor: Colors.primaryTint,
   },
   optionContent: {
     flex: 1,
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
   },
   noteInput: {
     backgroundColor: Colors.background,
-    borderRadius: 12,
+    borderRadius: 6,
     padding: 12,
     color: Colors.text,
     fontSize: 13,
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
   },
   disburseBtn: {
     backgroundColor: Colors.primary,
-    borderRadius: 14,
+    borderRadius: 6,
     paddingVertical: 15,
     flexDirection: 'row',
     justifyContent: 'center',
