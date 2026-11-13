@@ -1,6 +1,6 @@
 # PayPulse AI
 
-PayPulse AI is a cross-platform employee benefits demo for earned wage access, expense claims, payroll summaries, and HR approvals. The interface is available as a web app and an Expo mobile app.
+PayPulse AI v2.6.0 is a cross-platform employee benefits demo for earned wage access, expense claims, payroll summaries, and HR approvals. The responsive app runs on web and through Expo on mobile.
 
 ## Links
 
@@ -10,7 +10,7 @@ PayPulse AI is a cross-platform employee benefits demo for earned wage access, e
 
 ## Features
 
-- Employee and HR manager demo sign-in with role-specific views.
+- Responsive light interface with ink-blue navigation, paper-toned surfaces, and role-specific employee and HR manager views.
 - INR wage accrual, eligibility limit, and simulated wage advance ledger.
 - Expense claim submission with receipt attachment, search, and filters.
 - Manager claim review with approve/reject actions and notes.
@@ -19,14 +19,15 @@ PayPulse AI is a cross-platform employee benefits demo for earned wage access, e
 
 ## Tech stack
 
-- **Client:** React Native, React Native Web, Expo SDK 52, TypeScript, React Navigation, AsyncStorage, Axios.
-- **API:** Node.js, Express, TypeScript, REST, JWT authentication middleware.
-- **Hosting and CI:** Vercel and GitHub Actions.
+- **Client:** React 18, React Native 0.76, React Native Web, Expo SDK 52, TypeScript, and React Navigation.
+- **Client libraries:** Axios for API requests, AsyncStorage for session/demo persistence, Expo Image Picker for receipt attachments, and Expo Vector Icons.
+- **API:** Node.js, Express, TypeScript, REST endpoints, JWT authentication middleware, CORS, and dotenv.
+- **Delivery:** Vercel hosting, GitHub Actions build checks, and Expo EAS build scripts for Android and iOS previews.
 
 ## Architecture and demo data
 
 - The Expo client contains the screens, navigation, and API client.
-- The Express API exposes authentication, EWA, expense, notification, payslip, release, and Copilot routes.
+- The Express API exposes authentication, EWA, expense, notification, payslip, release, and rule-based Copilot routes.
 - Local/native clients connect to the API. The hosted web demo uses browser storage for its interactive demo state.
 - The API uses seeded in-memory data; it is not backed by a database and may reset when a serverless instance restarts.
 - All money movement is simulated. No real payroll or banking services are connected, and the Benefits Copilot uses rules rather than a hosted language model.
