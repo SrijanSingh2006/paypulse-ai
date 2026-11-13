@@ -31,12 +31,44 @@ jobs:
           mkdir -p .ci
           flutter create --no-pub --platforms=android --org ai.heftin --project-name paypulseflutter .ci/flutter-shell
           cp -R .ci/flutter-shell/android flutter_app/android
-      - name: Resolve packages, format, and analyze Dart
+      - name: Resolve packages and format Dart
         working-directory: flutter_app
         run: |
           flutter pub get
           dart format lib
-          flutter analyze
+      - name: Analyze Dart and report diagnostics
+        working-directory: flutter_app
+        shell: bash
+        run: |
+          set +e
+          flutter analyze --machine > "$RUNNER_TEMP/paypulse-dart-analysis.txt"
+          analyzer_status=$?
+          set -e
+          python3 - "$GITHUB_WORKSPACE" "$RUNNER_TEMP/paypulse-dart-analysis.txt" <<'PY'
+          import pathlib
+          import sys
+          from urllib.parse import unquote, urlparse
+
+          workspace = pathlib.Path(sys.argv[1]).resolve()
+          analysis_file = pathlib.Path(sys.argv[2])
+          levels = {"ERROR": "error", "WARNING": "warning", "INFO": "notice"}
+          for record in analysis_file.read_text(errors="replace").splitlines():
+              fields = record.split("|", 8)
+              if len(fields) < 8 or fields[0] not in levels:
+                  continue
+              source = fields[3]
+              if source.startswith("file:"):
+                  source = unquote(urlparse(source).path)
+              path = pathlib.Path(source)
+              try:
+                  path = path.resolve().relative_to(workspace).as_posix()
+              except (ValueError, OSError):
+                  path = source
+              message = fields[7].replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+              print(f"::{levels[fields[0]]} file={path},line={fields[4]},col={fields[5]}::{message}")
+          PY
+          cat "$RUNNER_TEMP/paypulse-dart-analysis.txt"
+          exit "$analyzer_status"
       - name: Build debug APK for device demonstration
         working-directory: flutter_app
         run: flutter build apk --debug --dart-define=API_BASE_URL=https://paypulse-api-three.vercel.app/api
