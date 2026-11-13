@@ -1,44 +1,42 @@
 # PayPulse AI
 
-PayPulse AI is a cross-platform employee benefits demo for earned wage access, expense claims, payroll details, and HR review workflows.
+PayPulse AI is a cross-platform employee benefits demo for earned wage access, expense claims, payroll summaries, and HR approvals. The interface is available as a web app and an Expo mobile app.
 
 ## Links
 
-- **Live app:** [dist-three-kappa-22.vercel.app](https://dist-three-kappa-22.vercel.app)
-- **API health:** [dist-three-kappa-22.vercel.app/api/health](https://dist-three-kappa-22.vercel.app/api/health)
+- **Live web demo:** [dist-three-kappa-22.vercel.app](https://dist-three-kappa-22.vercel.app)
+- **API health:** [paypulse-api-three.vercel.app/api/health](https://paypulse-api-three.vercel.app/api/health)
+- **GitHub:** [SrijanSingh2006/paypulse-ai](https://github.com/SrijanSingh2006/paypulse-ai)
 
 ## Features
 
-- Responsive light dashboard with a desktop workspace sidebar and mobile tabs.
-- Employee and HR manager sign-in, role previews, and session persistence.
-- INR wage accrual, simulated UPI advances, and an annual learning allowance.
-- Expense claims with receipt uploads, search, status filters, and manager approvals.
-- Payday outlook, payslip breakdown and CSV export, notifications, and a rule-based Benefits Copilot.
-
-### Demo sign-in
-
-Use `employee@heftin.ai` or `manager@heftin.ai` with password `password123`. The manager account can approve or reject expense claims.
+- Employee and HR manager demo sign-in with role-specific views.
+- INR wage accrual, eligibility limit, and simulated wage advance ledger.
+- Expense claim submission with receipt attachment, search, and filters.
+- Manager claim review with approve/reject actions and notes.
+- Payday outlook, payslip breakdown and CSV export, and notifications.
+- Rule-based Benefits Copilot for questions about demo benefits data.
 
 ## Tech stack
 
-- **Client:** React Native, React Native Web, Expo SDK 52, TypeScript, React Navigation
-- **API:** Node.js, Express, TypeScript, REST, JWT demo authentication
-- **State:** AsyncStorage and browser storage for the web demo; seeded in-memory data in the API
-- **Hosting:** Vercel; GitHub Actions checks the client and backend builds
+- **Client:** React Native, React Native Web, Expo SDK 52, TypeScript, React Navigation, AsyncStorage, Axios.
+- **API:** Node.js, Express, TypeScript, REST, JWT authentication middleware.
+- **Hosting and CI:** Vercel and GitHub Actions.
 
-## Architecture
+## Architecture and demo data
 
-```mermaid
-flowchart LR
-  Web[React Native Web] --> Demo[Demo data adapter]
-  Demo --> Browser[(Browser storage)]
-  Mobile[Expo mobile app] --> API[Express REST API]
-  Web -->|/api proxy| API
-  API --> Seed[(Seeded in-memory data)]
-  Demo --> Copilot[Rule-based Benefits Copilot]
-```
+- The Expo client contains the screens, navigation, and API client.
+- The Express API exposes authentication, EWA, expense, notification, payslip, release, and Copilot routes.
+- Local/native clients connect to the API. The hosted web demo uses browser storage for its interactive demo state.
+- The API uses seeded in-memory data; it is not backed by a database and may reset when a serverless instance restarts.
+- All money movement is simulated. No real payroll or banking services are connected, and the Benefits Copilot uses rules rather than a hosted language model.
 
-All figures use Indian rupees (INR). The hosted web demo stores its workspace in browser storage. The API uses sample in-memory data, which may reset when a serverless instance restarts.
+## Demo sign-in
+
+Use either account with password `password123`:
+
+- Employee: `employee@heftin.ai`
+- HR manager: `manager@heftin.ai`
 
 ## Run locally
 
@@ -51,9 +49,7 @@ npm ci --prefix mobile
 npm run dev
 ```
 
-This starts the API on port `4000` and Expo. Press `w` in the Expo terminal to open the web app. To start only the web app, run `npm run start:web` and open `http://localhost:3000`.
-
-Local API health check: `http://localhost:4000/api/health`.
+This starts the API on `http://localhost:4000` and Expo. Press `w` in the Expo terminal to open the web app. To start just the web app, run `npm run start:web` and open `http://localhost:3000`.
 
 ## Build
 
@@ -62,7 +58,3 @@ npm run typecheck
 npm run build:backend
 npm run build:web
 ```
-
-## Demo scope
-
-All data is sample data. Wage advances and reimbursements are simulations; no real payroll or banking accounts are connected and no money moves. The Benefits Copilot uses rules and project data, not a hosted language model.
