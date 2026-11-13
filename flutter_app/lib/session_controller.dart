@@ -21,7 +21,9 @@ class SessionController extends ChangeNotifier {
   Future<void> restore() async {
     final token = preferences.getString(_tokenKey);
     final storedUser = preferences.getString(_userKey);
-    if (token == null || storedUser == null) return;
+    if (token == null || storedUser == null) {
+      return;
+    }
     try {
       api.token = token;
       user = PayPulseUser.fromJson(Map<String, dynamic>.from(jsonDecode(storedUser) as Map));

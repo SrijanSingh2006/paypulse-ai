@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -59,7 +59,9 @@ class _SignInScreenState extends State<SignInScreen> {
     try {
       await session.signIn(_email.text, _password.text);
     } catch (error) {
-      if (mounted) _showMessage(context, _message(error), isError: true);
+      if (mounted) {
+        _showMessage(context, _message(error), isError: true);
+      }
     }
   }
 
@@ -218,7 +220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               TextField(controller: amountController, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Amount in ₹', prefixText: '₹ ')),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: transferType,
+                initialValue: transferType,
                 decoration: const InputDecoration(labelText: 'Transfer speed'),
                 items: const [
                   DropdownMenuItem(value: 'SAME_DAY_PAYPULSE', child: Text('Same day')),
@@ -236,7 +238,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
     amountController.dispose();
-    if (amount == null || !mounted) return;
+    if (amount == null || !mounted) {
+      return;
+    }
     if (amount <= 0 || amount > summary.available) {
       _showMessage(context, 'Enter an amount up to ${formatInr(summary.available)}.', isError: true);
       return;
@@ -244,9 +248,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       await context.read<SessionController>().api.requestAdvance(amount: amount, transferType: transferType);
       await _refresh();
-      if (mounted) _showMessage(context, 'Demo advance recorded. No money was moved.');
+      if (mounted) {
+        _showMessage(context, 'Demo advance recorded. No money was moved.');
+      }
     } catch (error) {
-      if (mounted) _showMessage(context, _message(error), isError: true);
+      if (mounted) {
+        _showMessage(context, _message(error), isError: true);
+      }
     }
   }
 
@@ -263,8 +271,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             FutureBuilder<WageSummary>(
               future: _summary,
               builder: (context, snapshot) {
-                if (snapshot.hasError) return _ErrorCard(message: _message(snapshot.error!), onRetry: _refresh);
-                if (!snapshot.hasData) return const Padding(padding: EdgeInsets.all(36), child: Center(child: CircularProgressIndicator()));
+                if (snapshot.hasError) {
+                  return _ErrorCard(message: _message(snapshot.error!), onRetry: _refresh);
+                }
+                if (!snapshot.hasData) {
+                  return const Padding(padding: EdgeInsets.all(36), child: Center(child: CircularProgressIndicator()));
+                }
                 final value = snapshot.data!;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -339,7 +351,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               TextField(controller: amount, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: const InputDecoration(labelText: 'Amount', prefixText: '₹ ')),
               const SizedBox(height: 10),
               DropdownButtonFormField<String>(
-                value: category,
+                initialValue: category,
                 decoration: const InputDecoration(labelText: 'Category'),
                 items: const [
                   DropdownMenuItem(value: 'EDUCATION_EDTECH', child: Text('Learning & education')),
@@ -354,7 +366,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
               OutlinedButton.icon(
                 onPressed: () async {
                   final selected = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 65, maxWidth: 1400, maxHeight: 1400);
-                  if (selected != null) setDialogState(() => receipt = selected);
+                  if (selected != null) {
+                    setDialogState(() => receipt = selected);
+                  }
                 },
                 icon: const Icon(Icons.add_photo_alternate_outlined),
                 label: Text(receipt == null ? 'Attach receipt (optional)' : 'Receipt attached'),
@@ -397,9 +411,13 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
             receiptUrl: receiptUrl,
           );
       await _refresh();
-      if (mounted) _showMessage(context, 'Claim submitted for review.');
+      if (mounted) {
+        _showMessage(context, 'Claim submitted for review.');
+      }
     } catch (error) {
-      if (mounted) _showMessage(context, _message(error), isError: true);
+      if (mounted) {
+        _showMessage(context, _message(error), isError: true);
+      }
     } finally {
       title.dispose();
       merchant.dispose();
@@ -411,9 +429,13 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     try {
       await context.read<SessionController>().api.reviewExpense(id, decision);
       await _refresh();
-      if (mounted) _showMessage(context, decision == 'APPROVE' ? 'Claim approved.' : 'Claim rejected.');
+      if (mounted) {
+        _showMessage(context, decision == 'APPROVE' ? 'Claim approved.' : 'Claim rejected.');
+      }
     } catch (error) {
-      if (mounted) _showMessage(context, _message(error), isError: true);
+      if (mounted) {
+        _showMessage(context, _message(error), isError: true);
+      }
     }
   }
 
@@ -440,10 +462,16 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           FutureBuilder<List<Map<String, dynamic>>>(
             future: _claims,
             builder: (context, snapshot) {
-              if (snapshot.hasError) return _ErrorCard(message: _message(snapshot.error!), onRetry: _refresh);
-              if (!snapshot.hasData) return const Padding(padding: EdgeInsets.all(30), child: Center(child: CircularProgressIndicator()));
+              if (snapshot.hasError) {
+                return _ErrorCard(message: _message(snapshot.error!), onRetry: _refresh);
+              }
+              if (!snapshot.hasData) {
+                return const Padding(padding: EdgeInsets.all(30), child: Center(child: CircularProgressIndicator()));
+              }
               final claims = snapshot.data!;
-              if (claims.isEmpty) return _EmptyCard(icon: Icons.receipt_long_outlined, title: 'Nothing here yet', message: widget.user.isManager ? 'No claims match this filter.' : 'Your submitted claims will show up here.');
+              if (claims.isEmpty) {
+                return _EmptyCard(icon: Icons.receipt_long_outlined, title: 'Nothing here yet', message: widget.user.isManager ? 'No claims match this filter.' : 'Your submitted claims will show up here.');
+              }
               return Column(children: claims.map((claim) => _ExpenseCard(claim: claim, isManager: widget.user.isManager, onReview: (decision) => _review(textValue(claim['id']), decision))).toList());
             },
           ),
@@ -460,9 +488,13 @@ class ProfileScreen extends StatelessWidget {
   Future<void> _switchRole(BuildContext context, String role) async {
     try {
       await context.read<SessionController>().switchRole(role);
-      if (context.mounted) _showMessage(context, 'Switched to ${role == 'EMPLOYEE' ? 'employee' : 'HR manager'} demo.');
+      if (context.mounted) {
+        _showMessage(context, 'Switched to ${role == 'EMPLOYEE' ? 'employee' : 'HR manager'} demo.');
+      }
     } catch (error) {
-      if (context.mounted) _showMessage(context, _message(error), isError: true);
+      if (context.mounted) {
+        _showMessage(context, _message(error), isError: true);
+      }
     }
   }
 
@@ -654,7 +686,9 @@ String _message(Object error) => error is ApiException ? error.message : 'Someth
 
 String _dateText(Object? value) {
   final date = DateTime.tryParse(value?.toString() ?? '');
-  if (date == null) return 'Date not available';
+  if (date == null) {
+    return 'Date not available';
+  }
   return '${date.day}/${date.month}/${date.year}';
 }
 

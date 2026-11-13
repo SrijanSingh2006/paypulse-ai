@@ -1,7 +1,9 @@
 import 'package:intl/intl.dart';
 
 double numberValue(Object? value) {
-  if (value is num) return value.toDouble();
+  if (value is num) {
+    return value.toDouble();
+  }
   return double.tryParse(value?.toString() ?? '') ?? 0;
 }
 

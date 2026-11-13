@@ -70,8 +70,12 @@ class PayPulseApi {
 
   Future<List<Map<String, dynamic>>> expenses({String? status, String? category}) async {
     final query = <String, String>{};
-    if (status != null && status != 'ALL') query['status'] = status;
-    if (category != null && category != 'ALL') query['category'] = category;
+    if (status != null && status != 'ALL') {
+      query['status'] = status;
+    }
+    if (category != null && category != 'ALL') {
+      query['category'] = category;
+    }
     final response = await _request('GET', '/expenses', query: query.isEmpty ? null : query);
     return (response['claims'] as List? ?? [])
         .map((item) => Map<String, dynamic>.from(item as Map))
